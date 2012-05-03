@@ -13,10 +13,10 @@ worker_rlimit_nofile 10240;
 
 http {
   include       <%= @node[:nginx][:dir] %>/mime.types;
+  index         index.html index.htm;
   default_type  application/octet-stream;
 
-  access_log  <%= @node[:nginx][:log_dir] %>/access.log;
-  error_log <%= @node[:nginx][:log_dir] %>/error.log;
+  access_log    <%= @node[:nginx][:log_dir] %>/access.log;
 
   sendfile on;
   tcp_nopush on;
