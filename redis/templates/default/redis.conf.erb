@@ -1,0 +1,52 @@
+# Redis configuration file example
+
+daemonize yes
+pidfile /var/run/redis.pid
+port 6379
+bind 127.0.0.1
+timeout 300
+# maxclients 128
+
+loglevel notice
+logfile /var/redis/redis.log
+# syslog-enabled no
+# syslog-ident redis
+# syslog-facility local0
+
+# Set the number of databases. The default database is DB 0, you can select
+# a different one on a per-connection basis using SELECT <dbid> where
+# dbid is a number between 0 and 'databases'-1
+databases 16
+
+################################ SNAPSHOTTING  #################################
+#
+# Save the DB on disk:
+#
+#   save <seconds> <changes>
+#
+#   Will save the DB if both the given number of seconds and the given
+#   number of write operations against the DB occurred.
+#
+#   In the example below the behaviour will be to save:
+#   after 900 sec (15 min) if at least 1 key changed
+#   after 300 sec (5 min) if at least 10 keys changed
+#   after 60 sec if at least 10000 keys changed
+#
+#   Note: you can disable saving at all commenting all the "save" lines.
+
+save 900 1
+save 300 10
+save 60 10000
+
+rdbcompression yes
+
+# The filename where to dump the DB
+dbfilename dump.rdb
+
+# The working directory.
+dir /var/redis/db
+
+appendonly no
+appendfsync everysec
+no-appendfsync-on-rewrite no
+activerehashing yes
