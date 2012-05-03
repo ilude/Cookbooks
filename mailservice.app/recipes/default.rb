@@ -37,6 +37,7 @@ template "server.mailservice.app.conf" do
   owner "root"
   group "root"
   mode "0644"
+  notifies :reload, resources(:service => "nginx")
 end
 
 template "upstream.mailservice.app.conf" do
@@ -45,6 +46,7 @@ template "upstream.mailservice.app.conf" do
   owner "root"
   group "root"
   mode "0644"
+  notifies :reload, resources(:service => "nginx")
 end
 
 template "mailservice.app.conf" do
@@ -53,6 +55,7 @@ template "mailservice.app.conf" do
   owner "root"
   group "root"
   mode "0644"
+  notifies :restart, resources(:service => "mailservice.app")
 end
 
 service "mailservice.app" do
