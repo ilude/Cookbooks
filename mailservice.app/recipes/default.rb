@@ -10,6 +10,7 @@ git "/apps/mailservice.app" do
   reference "master"
   action :sync
   notifies :run, resources(:execute => "unicorn_owns_apps")
+end
 
 %w{tmp/sockets tmp/pids log}.each do |dir|
    directory "/apps/mailservice.app/#{dir}" do
