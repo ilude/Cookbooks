@@ -4,7 +4,7 @@ git "/apps/mailservice.app" do
   repository "git@npi.unfuddle.com:npi/mailchimptest.git"
   reference "master"
   action :sync
-  owner "unicorn"
+  user "unicorn"
   group "unicorn"
 end
 
