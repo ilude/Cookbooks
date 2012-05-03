@@ -1,8 +1,14 @@
 
-    location /mailservice {
+    server_name_in_redirect off;
+
+    location = /mailservice {
+      return 301 $uri/;
+    }
+
+    location /mailservice/ {
       access_log  <%= @node[:nginx][:log_dir] %>/access.mailservice.log;
       root /app/mailservice.app/public;
-      rewrite ^/mailservice/?(.*)$ /$1 last;
+      rewrite ^/mailservice/(.*)$ /$1 break;
       try_files $uri $uri/index.html $uri/index.htm @mailservice;
     }
 
