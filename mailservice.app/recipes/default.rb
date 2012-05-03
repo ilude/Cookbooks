@@ -1,5 +1,10 @@
 include_recipe "unicorn"
 
+gem_package "sinatra"
+gem_package "gibbon"
+gem_package "resque"
+
+
 service "mailservice.app" do
   provider Chef::Provider::Service::Upstart
   supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
