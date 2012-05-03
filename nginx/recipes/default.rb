@@ -58,6 +58,7 @@ link "#{node[:nginx][:dir]}/sites-enabled/default-site" do
 end
 
 service "nginx" do
+  provider Chef::Provider::Service::Upstart
   action [:enable, :start]
 end
 

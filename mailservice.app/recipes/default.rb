@@ -1,5 +1,10 @@
 include_recipe "unicorn"
 
+service "mailservice.app" do
+  provider Chef::Provider::Service::Upstart
+  supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
+end
+
 git "/apps/mailservice.app" do
   repository "git@npi.unfuddle.com:npi/mailchimptest.git"
   reference "master"
@@ -43,4 +48,9 @@ template "mailservice.app.conf" do
   owner "root"
   group "root"
   mode "0644"
+end
+
+service "mailservice.app" do
+  provider Chef::Provider::Service::Upstart
+  action [:enable, :start]
 end
