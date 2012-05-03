@@ -1,13 +1,15 @@
 include_recipe "unicorn"
 
+execute "unicorn_owns_apps" do
+  command "chown -R unicorn:unicron /apps/*"
+  action :nothing
+end
+
 git "/apps/mailservice.app" do
   repository "git@npi.unfuddle.com:npi/mailchimptest.git"
   reference "master"
   action :sync
-  user "unicorn"
-  group "unicorn"
-end
-
+  notifies :run, resources(:execute => "unicorn_owns_apps")
 
 %w{tmp/sockets tmp/pids log}.each do |dir|
    directory "/apps/mailservice.app/#{dir}" do
