@@ -2,7 +2,8 @@
     location /mailservice {
       access_log  <%= @node[:nginx][:log_dir] %>/access.mailservice.log;
       root /app/mailservice.app/public;
-      try_files $uri @mailservice;
+      rewrite ^/mailservice/?(.*)$ /$1 last;
+      try_files $uri $uri/index.html $uri/index.htm @mailservice;
     }
 
     location @mailservice {
