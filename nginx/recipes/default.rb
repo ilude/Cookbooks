@@ -16,19 +16,41 @@ end
 
 service "nginx" do
   provider Chef::Provider::Service::Upstart
-#  subscribes :restart
-  supports :status => true, :restart => true, :start => true, :stop => true
+  supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
 end
 
 template "/etc/init/nginx.conf" do
-  source "upstart.nginx.conf"
+  source "upstart.nginx.conf.erb"
   owner "root"
   group "root"
   mode "0644"
-#  notifies :restart, resources(:service => "nginx")
+  notifies :restart, resources(:service => "nginx")
 end
 
-#service "nginx" do
-#  action [:enable, :start]
-#end
+template "nginx.conf" do
+  path "#{node[:nginx][:dir]}/nginx.conf"
+  source "nginx.conf.erb"
+  owner "root"
+  group "root"
+  mode 0644
+  notifies :reload, resources(:service => "nginx")
+end
+
+template "default-site" do
+  path "#{node[:nginx][:dir]}/sites-available/default-site"
+  source "default-site.erb"
+  owner "root"
+  group "root"
+  mode 0644
+  notifies :reload, resources(:service => "nginx")
+end
+
+link "#{node[:nginx][:dir]}/sites-enabled/default-site" do
+  to "#{node[:nginx][:dir]}/sites-available/default-site"
+  notifies :reload, resources(:service => "nginx")
+end
+
+service "nginx" do
+  action [:enable, :start]
+end
 

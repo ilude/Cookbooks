@@ -1,0 +1,16 @@
+
+include <%= @node[:nginx][:dir] %>/apps/upstream.*.conf;
+
+server {
+  listen   80;
+  server_name  <%= @node[:hostname] %>;
+
+  access_log  <%= @node[:nginx][:log_dir] %>/localhost.access.log;
+
+  include <%= @node[:nginx][:dir] %>/apps/server.*.conf;
+
+  location / {
+    root   /var/www/nginx-default;
+    index  index.html index.htm;
+  }
+}
