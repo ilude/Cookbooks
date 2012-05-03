@@ -1,0 +1,15 @@
+description "MailChimp api"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+respawn
+respawn limit 99 5
+console none
+
+
+setuid unicorn
+setgid unicorn
+chdir /apps/mailservice.app
+
+exec /usr/local/bin/unicorn -c /apps/mailservice.app/unicorn.rb

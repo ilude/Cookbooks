@@ -45,6 +45,13 @@ template "default-site" do
   notifies :reload, resources(:service => "nginx")
 end
 
+directory "#{node[:nginx][:dir]}/apps" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+
 link "#{node[:nginx][:dir]}/sites-enabled/default-site" do
   to "#{node[:nginx][:dir]}/sites-available/default-site"
   notifies :reload, resources(:service => "nginx")
