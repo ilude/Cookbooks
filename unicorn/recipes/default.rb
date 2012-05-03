@@ -2,7 +2,10 @@ include_recipe "nginx"
 
 gem_package "unicorn"
 
-user "unicorn" 
+user "unicorn" do
+  home "/home/unicorn"
+  supports manage_home: true
+end
 
 directory "/apps" do
   owner "unicorn"
