@@ -2,13 +2,13 @@
 
 daemonize yes
 pidfile /var/run/redis.pid
-port 6379
-bind 127.0.0.1
-timeout 300
+port <%= node[:redis][:port] %>
+bind <%= node[:redis][:bind] %>
+timeout <%= node[:redis][:timeout] %>
 # maxclients 128
 
-loglevel notice
-logfile /var/redis/redis.log
+loglevel <%= node[:redis][:loglevel] %>
+logfile  <%= node[:redis][:log_dir] %>/redis.log
 # syslog-enabled no
 # syslog-ident redis
 # syslog-facility local0

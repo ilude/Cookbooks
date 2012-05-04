@@ -20,16 +20,16 @@ directory node[:redis][:dir] do
   action :create
 end
 
-remote_file "#{Chef::Config[:file_cache_path]}/redis.tar.gz" do
-  source node[:redis][:src_link]
+remote_file "#{Chef::Config[:file_cache_path]}/redis-#{node[:redis][:version]}.tar.gz" do
+  source "http://redis.googlecode.com/files/redis-#{node[:redis][:version]}.tar.gz"
   action :create_if_missing
 end
 
 bash "compile_redis_source" do
   cwd Chef::Config[:file_cache_path]
   code <<-EOH
-    tar zxf redis.tar.gz
-    cd antirez-redis-*
+    tar zxf redis-#{node[:redis][:version]}.tar.gz
+    cd redis-#{node[:redis][:version]}
     make && make install
   EOH
   creates "/usr/local/bin/redis-server"
@@ -50,9 +50,9 @@ template "redis.conf" do
   notifies :restart, resources(:service => "redis")
 end
 
-template "redis.upstart.conf" do
+template "upstart.redis.conf" do
   path "/etc/init/redis.conf"
-  source "redis.upstart.conf.erb"
+  source "upstart.redis.conf.erb"
   owner "root"
   group "root"
   mode "0644"
