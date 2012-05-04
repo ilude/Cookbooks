@@ -3,9 +3,9 @@ package "build-essential" do
 end
 
 user node[:redis][:user] do
-  action :create
   system true
   shell "/bin/false"
+  supports :manage_home => false
 end
 
 directory node[:redis][:data_dir] do

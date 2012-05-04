@@ -5,6 +5,7 @@ gem_package "unicorn"
 user "#{node[:unicorn][:user]}" do
   system true
   shell "/bin/false"
+  supports :manage_home => false
 end
 
 directory "#{node[:unicorn][:apps_dir]}" do
