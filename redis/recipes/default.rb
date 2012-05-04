@@ -5,19 +5,20 @@ end
 user node[:redis][:user] do
   system true
   shell "/bin/false"
-  supports :manage_home => false
 end
 
 directory node[:redis][:data_dir] do
   owner "redis"
   mode "0755"
   action :create
+  recursive true
 end
 
 directory node[:redis][:dir] do
   owner "root"
   mode "0755"
   action :create
+  recursive true
 end
 
 remote_file "#{Chef::Config[:file_cache_path]}/redis-#{node[:redis][:version]}.tar.gz" do
@@ -63,6 +64,7 @@ directory node[:redis][:log_dir] do
   mode 0755
   owner node[:redis][:user]
   action :create
+  recursive true
 end
 
 
