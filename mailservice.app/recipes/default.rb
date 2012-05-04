@@ -1,5 +1,6 @@
 include_recipe "unicorn"
 
+
 gem_package "sinatra"
 gem_package "gibbon"
 gem_package "resque"
@@ -10,22 +11,22 @@ service "mailservice.app" do
   supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
 end
 
-git "/apps/mailservice.app" do
+git "#{node[:unicorn][:apps_dir]}/mailservice.app" do
   repository "git@npi.unfuddle.com:npi/mailchimptest.git"
   reference "master"
   action :sync
 end
 
 execute "unicorn_owns_apps" do
-  command "chown -R unicorn:unicorn /apps/*"
+  command "chown -R #{node[:unicorn][:user]}:#{node[:unicorn][:group]} #{node[:unicorn][:apps_dir]}/mailservice.app"
   action :run
 end
 
 %w{tmp/sockets tmp/pids log}.each do |dir|
-   directory "/apps/mailservice.app/#{dir}" do
+   directory "#{node[:unicorn][:apps_dir]}/mailservice.app/#{dir}" do
       mode "0775"
-      owner "unicorn"
-      group "unicorn"
+      owner "#{node[:unicorn][:user]}"
+      group "#{node[:unicorn][:group]}"
       action :create
       recursive true
    end
