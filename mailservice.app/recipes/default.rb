@@ -11,8 +11,17 @@ service "mailservice.app" do
   supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
 end
 
+host = "npi.unfuddle.com"
+repo = "git@#{host}:npi/mailchimptest.git"
+
+execute "add_known_host" do
+  known_hosts = "~/.ssh/known_hosts"
+  command "ssh-keyscan -t rsa #{host} >> known_hosts"
+  not_if { File.read(known_hosts).include?(host) }
+end
+
 git "#{node[:unicorn][:apps_dir]}/mailservice.app" do
-  repository "git@npi.unfuddle.com:npi/mailchimptest.git"
+  repository repo
   reference "master"
   action :sync
 end

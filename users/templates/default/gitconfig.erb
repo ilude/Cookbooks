@@ -1,0 +1,18 @@
+[branch]
+autosetuprebase = always
+[alias]
+co = checkout
+cb = checkout -b
+ci = commit -m
+s = status -s
+br = branch
+unstage = reset .
+aa = !"git add -A . && git status -s"
+unstage = reset .
+pushall = !"git push --all; git push --tags"
+l = !"git --no-pager log -20 --date=short --pretty=tformat:\"%C(yellow)%h%Creset - %C(yellow)%an%Creset %C(white)%ad%Creset%C(yellow)%d%Creset %Cgreen%s%Creset\""
+ll = !"git log --date=short --pretty=tformat:\"%C(yellow)%h%Creset - %C(yellow)%an%Creset %C(white)%ad%Creset%C(yellow)%d%Creset %Cgreen%s%Creset\""
+lg = !"git log --graph --abbrev-commit --date=relative --pretty=format:\"%C(yellow)%h%Creset - %C(yellow)%an%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset\""
+lf = show --pretty=\"format:\" --name-only
+wtf = reflog
+rs = remote show origin
