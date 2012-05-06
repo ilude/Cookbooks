@@ -36,6 +36,8 @@ template "nginx.conf" do
   notifies :reload, resources(:service => "nginx")
 end
 
+
+
 template "default-site" do
   path "#{node[:nginx][:dir]}/sites-available/default-site"
   source "default-site.erb"
@@ -50,6 +52,12 @@ directory "#{node[:nginx][:dir]}/apps" do
   group "root"
   mode "0755"
   action :create
+end
+
+file "#{node[:nginx][:dir]}/sites-enabled/default" do
+  action :delete
+  only_if { File.exist?("#{node[:nginx][:dir]}/sites-enabled/default") }
+  notifies :reload, resources(:service => "nginx")
 end
 
 link "#{node[:nginx][:dir]}/sites-enabled/default-site" do
