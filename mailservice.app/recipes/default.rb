@@ -13,10 +13,9 @@ end
 
 host = "npi.unfuddle.com"
 repo = "git@#{host}:npi/mailchimptest.git"
-known_hosts = "/home/root/.ssh/known_hosts"
+known_hosts = "/root/.ssh/known_hosts"
 
 execute "add_known_host" do
-  
   command "ssh-keyscan -t rsa #{host} >> #{known_hosts}"
   not_if { File.read(known_hosts).include?(host) }
 end
