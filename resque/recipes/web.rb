@@ -44,6 +44,14 @@ template "unicorn.rb" do
   mode "0644"
 end
 
+template "script_name.rb" do
+  path "#{node[:unicorn][:apps_dir]}/#{app_name}/script_name.rb"
+  source "script_name.rb.erb"
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0644"
+end
+
 template "upstream.#{app_name}.conf" do
   path "#{node[:nginx][:dir]}/apps/upstream.#{app_name}.conf"
   source "nginx.upstream.#{app_name}.conf.erb"
