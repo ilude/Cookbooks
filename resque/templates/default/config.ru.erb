@@ -10,5 +10,9 @@ require 'resque/server'
 #  load ::File.expand_path(ENV['RESQUECONFIG'])
 #end
 
+#Resque::Server.use Rack::Auth::Basic do |username, password|
+#  password == 'super-secret-password'
+#end
+
 use Rack::ShowExceptions
 run Resque::Server.new
