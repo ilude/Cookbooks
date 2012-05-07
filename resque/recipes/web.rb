@@ -1,7 +1,5 @@
 include_recipe "unicorn"
 
-include_attribute "resque::web"
-
 gem_package "resque"
 
 app_name = node[:resque_web][:app_name]
