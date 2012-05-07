@@ -1,4 +1,4 @@
-  upstream unicorn_mail_service {
-    server unix:/apps/mailservice.app/tmp/sockets/unicorn.sock
+  upstream unicorn_<%= node[:mailservice_app][:service_name] %>_service {
+    server unix:<%= node[:unicorn][:apps_dir] %>/<%= node[:mailservice_app][:app_name] %>/tmp/sockets/unicorn.sock
     fail_timeout=0;
   }

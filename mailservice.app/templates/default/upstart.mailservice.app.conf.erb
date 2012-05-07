@@ -8,8 +8,8 @@ respawn limit 10 5
 console none
 
 
-setuid unicorn
-setgid unicorn
-chdir /apps/mailservice.app
+setuid <%= node[:unicorn][:user] %>
+setgid <%= node[:unicorn][:group] %>
+chdir <%= node[:unicorn][:apps_dir] %>/<%= node[:mailservice_app][:app_name] %>
 
-exec /usr/local/bin/unicorn -c /apps/mailservice.app/unicorn.rb
+exec /usr/local/bin/unicorn -c <%= node[:unicorn][:apps_dir] %>/<%= node[:mailservice_app][:app_name] %>/unicorn.rb

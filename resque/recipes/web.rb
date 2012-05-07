@@ -1,41 +1,21 @@
 include_recipe "unicorn"
 
-gem_package "sinatra"
-gem_package "gibbon"
+include_attribute "resque::web"
+
 gem_package "resque"
 
-app_name = node[:mailservice_app][:app_name]
+app_name = node[:resque_web][:app_name]
 
 service app_name do
   provider Chef::Provider::Service::Upstart
   supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
 end
 
-host = "npi.unfuddle.com"
-repo = "git@#{host}:npi/mailchimptest.git"
-known_hosts = "/root/.ssh/known_hosts"
-
-execute "add_known_host" do
-  command "ssh-keyscan -t rsa #{host} >> #{known_hosts}"
-  not_if { File.read(known_hosts).include?(host) }
-end
-
-git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
-  repository repo
-  reference "master"
-  action :sync
-end
-
-execute "unicorn_owns_apps" do
-  command "chown -R #{node[:unicorn][:user]}:#{node[:unicorn][:group]} #{node[:unicorn][:apps_dir]}/#{app_name}"
-  action :run
-end
-
 %w{tmp/sockets tmp/pids log}.each do |dir|
    directory "#{node[:unicorn][:apps_dir]}/#{app_name}/#{dir}" do
       mode "0775"
-      owner "#{node[:unicorn][:user]}"
-      group "#{node[:unicorn][:group]}"
+      owner node[:unicorn][:user]
+      group node[:unicorn][:group]
       action :create
       recursive true
    end
@@ -48,6 +28,22 @@ template "server.#{app_name}.conf" do
   group "root"
   mode "0644"
   notifies :reload, resources(:service => "nginx")
+end
+
+template "config.ru" do
+  path "#{node[:unicorn][:apps_dir]}/config.ru"
+  source "config.ru.erb"
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0644"
+end
+
+template "unicorn.rb" do
+  path "#{node[:unicorn][:apps_dir]}/unicorn.rb"
+  source "unicorn.rb.erb"
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0644"
 end
 
 template "upstream.#{app_name}.conf" do
