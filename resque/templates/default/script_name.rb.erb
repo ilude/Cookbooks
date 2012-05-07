@@ -4,10 +4,17 @@ class ScriptName
   end
 
   def call(env)
+    puts "path: #{env["PATH_INFO"]}"
+    puts "name: #{env["SCRIPT_NAME"]}"
+
     if env["PATH_INFO"] =~ /^\/<%= node[:resque_web][:service_name] %>/
        env["PATH_INFO"].sub!(/^\/<%= node[:resque_web][:service_name] %>/, '')
        env['SCRIPT_NAME'] = '/<%= node[:resque_web][:service_name] %>'
     end
+
+    puts "path: #{env["PATH_INFO"]}"
+    puts "name: #{env["SCRIPT_NAME"]}"
+
     @app.call(env)
   end
 end
