@@ -29,7 +29,7 @@ template "server.#{app_name}.conf" do
 end
 
 template "config.ru" do
-  path "#{node[:unicorn][:apps_dir]}/config.ru"
+  path "#{node[:unicorn][:apps_dir]}/#{app_name}/config.ru"
   source "config.ru.erb"
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
@@ -37,7 +37,7 @@ template "config.ru" do
 end
 
 template "unicorn.rb" do
-  path "#{node[:unicorn][:apps_dir]}/unicorn.rb"
+  path "#{node[:unicorn][:apps_dir]}/#{app_name}/unicorn.rb"
   source "unicorn.rb.erb"
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
