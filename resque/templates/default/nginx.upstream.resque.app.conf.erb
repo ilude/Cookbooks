@@ -1,4 +1,4 @@
   upstream unicorn_<%= node[:resque_web][:service_name] %>_service {
-    server unix:<%= node[:unicorn][:apps_dir] %>/<%= node[:resque_app][:app_name] %>/tmp/sockets/unicorn.sock
+    server unix:<%= node[:unicorn][:apps_dir] %>/<%= node[:resque_web][:app_name] %>/tmp/sockets/unicorn.sock
     fail_timeout=0;
   }
