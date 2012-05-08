@@ -11,5 +11,5 @@ template "ssmtp.conf" do
 end
 
 link "/usr/sbin/ssmtp" do
-  to "/usr/local/bin/mail"
+  to "/usr/bin/mail"
 end
