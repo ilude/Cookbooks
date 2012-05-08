@@ -8,6 +8,6 @@ respawn
 
 env PIDFILE=/var/run/php-fastcgi.pid
 env CHILDREN=2
-env PHP5=/usr/bin/php5-cgi
+env RUNNER=/usr/local/bin/fcgiwrap
 
-exec /usr/bin/spawn-fcgi -s <%= node[:nginx][:php_socket] %> -P $PIDFILE -C $CHILDREN -f $PHP5 -u <%= node[:nginx][:user] %> -g <%= node[:nginx][:group] %>
+exec /usr/bin/spawn-fcgi -s <%= node[:nginx][:fcgi_socket] %> -P $PIDFILE -C $CHILDREN -f $RUNNER -u <%= node[:nginx][:user] %> -g <%= node[:nginx][:group] %>

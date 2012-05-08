@@ -1,0 +1,4 @@
+upstream php {
+  server unix:<%= node[:nginx][:php_socket] %>;
+  fail_timeout=0;
+}

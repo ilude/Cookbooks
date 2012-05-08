@@ -25,3 +25,6 @@ default.nginx[:worker_processes] = 6
 default.nginx[:worker_connections] = 2048
 default.nginx[:server_names_hash_bucket_size] = 128
 default.nginx[:conf_dir] = nginx[:dir] + "/conf.d"
+
+default.nginx[:php_socket] = "/tmp/php-fastcgi.socket"
+default.nginx[:fcgi_socket] = "/tmp/fcgiwrap.socket"

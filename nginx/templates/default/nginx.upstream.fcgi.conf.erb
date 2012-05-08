@@ -1,0 +1,4 @@
+upstream fcgi  {
+  server unix:<%= node[:nginx][:fcgi_socket] %>;
+  fail_timeout=0;
+}

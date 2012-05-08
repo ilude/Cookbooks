@@ -4,6 +4,7 @@ package "php5-cli"
 package "php5-cgi"
 package "psmisc"
 package "spawn-fcgi"
+package "fcgiwrap"
 
 service "php-cgi" do
   provider Chef::Provider::Service::Upstart
@@ -16,6 +17,24 @@ template "upstart.php-cgi.conf" do
   owner "root"
   group "root"
   mode "0644"
+end
+
+template "upstream.php.conf" do
+  path "#{node[:nginx][:dir]}/apps/upstream.php.conf"
+  source "nginx.upstream.php.conf.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :reload, resources(:service => "nginx")
+end
+
+template "upstream.fcgi.conf" do
+  path "#{node[:nginx][:dir]}/apps/upstream.fcgi.conf"
+  source "nginx.upstream.fcgi.conf.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :reload, resources(:service => "nginx")
 end
 
 service "php-cgi" do
