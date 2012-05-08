@@ -1,0 +1,11 @@
+description "php-fastcgi - respawning UNIX Socket"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+setuid <%= node[:nginx][:user] %>
+setgid <%= node[:nginx][:group] %>
+
+expect fork
+respawn
+exec PHP_FCGI_CHILDREN=5 PHP_FCGI_MAX_REQUESTS=125 /usr/bin/php-cgi -q -b /tmp/php-fastcgi.socket
