@@ -23,7 +23,7 @@ directory "/root/.ssh" do
 end
 
 execute "add_known_host" do
-  command "ssh-keyscan -t rsa #{host} >> #{known_hosts}"
+  command "ssh-keyscan -t rsa #{host} > #{known_hosts}"
   not_if { File.read(known_hosts).include?(host) }
 end
 
