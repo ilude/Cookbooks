@@ -3,6 +3,7 @@ include_recipe "unicorn"
 gem_package "sinatra"
 gem_package "gibbon"
 gem_package "resque"
+gem_package "fnordmetric"
 
 app_name = node[:mailservice_app][:app_name]
 
