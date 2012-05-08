@@ -24,7 +24,7 @@ end
 
 execute "add_known_host" do
   command "ssh-keyscan -t rsa #{host} >> #{known_hosts}"
-  not_if { !File.exists?(known_hosts) || File.read(known_hosts).include?(host) }
+  not_if { File.exists?(known_hosts) && File.read(known_hosts).include?(host) }
 end
 
 git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
