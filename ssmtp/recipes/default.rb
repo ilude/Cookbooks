@@ -10,6 +10,6 @@ template "ssmtp.conf" do
   mode "0644"
 end
 
-link "/usr/sbin/ssmtp" do
-  to "/usr/bin/mail"
+package "mailutils" do
+  action :install
 end
