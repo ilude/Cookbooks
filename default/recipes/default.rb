@@ -15,7 +15,7 @@ directory "/home/#{node[:user][:name]}/.ssh" do
   mode "0700"
 end
 
-remotefile "/home/#{node[:user][:name]}/.ssh/authorized_keys" do
+remote_file "/home/#{node[:user][:name]}/.ssh/authorized_keys" do
   source "https://raw.github.com/gist/2647943/vagabond.pub"
   owner node[:user][:name]
   group node[:user][:name]
