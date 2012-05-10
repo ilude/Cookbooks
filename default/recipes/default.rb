@@ -9,6 +9,10 @@ user node[:user][:name] do
   shell "/bin/bash"
 end
 
+group node[:user][:name] do
+  members [node[:user][:name]]
+end
+
 directory "/home/#{node[:user][:name]}/.ssh" do
   owner node[:user][:name]
   group node[:user][:name]
