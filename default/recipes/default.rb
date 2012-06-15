@@ -36,30 +36,3 @@ execute "adm_can_sudo" do
   command "/bin/sed -i -e 's/%admin ALL=(ALL) ALL/%adm ALL=NOPASSWD:ALL/g' /etc/sudoers"
   action :run
 end
-
-service "networking " do
-  supports :restart => true, :start => true, :stop => true
-end
-
-if node[:network] && node[:network][:static]
-  template "/etc/network/interfaces.new" do
-    source "interfaces.static.erb"
-    owner "root"
-    group "root"
-    mode "0600"
-    notifies :restart, resources(:service => "networking")
-  end
-else
-  template "/etc/network/interfaces.new" do
-    source "interfaces.dhcp.erb"
-    owner "root"
-    group "root"
-    mode "0600"
-  end
-end
-
-execute "replace_interfaces_file" do
-  command "mv /etc/network/interfaces.new /etc/network/interfaces"
-  action :run
-  notifies :restart, resources(:service => "networking")
-end
