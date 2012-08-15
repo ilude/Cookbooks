@@ -1,11 +1,7 @@
 
     server_name_in_redirect off;
 
-    location = /uploader {
-      return 301 $uri/;
-    }
-
-    location /uploader/ {
+    location / {
       access_log  <%= node[:nginx][:log_dir] %>/access.uploader.log;
       root <%= node[:unicorn][:apps_dir] %>/uploader.app/public;
       rewrite ^/uploader/(.*)$ /$1 break;
@@ -19,4 +15,14 @@
 
       # pass to the upstream unicorn server mentioned above
       proxy_pass http://unicorn_uploader_service;
+    }
+
+    # if the request is for a static resource, nginx should serve it directly
+    # and add a far future expires header to it, making the browser
+    # cache the resource and navigate faster over the website
+    # this probably needs some work with Rails 3.1's asset pipe_line
+    location ~ ^/(images|javascripts|stylesheets|system)/  {
+      root <%= node[:unicorn][:apps_dir] %>/uploader.app/public;
+      expires max;
+      break;
     }
