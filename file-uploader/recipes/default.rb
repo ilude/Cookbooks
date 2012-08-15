@@ -36,7 +36,7 @@ execute "unicorn_owns_apps" do
   action :run
 end
 
-%w{tmp/sockets tmp/pids log}.each do |dir|
+%w{tmp/sockets tmp/pids log public/data}.each do |dir|
    directory "#{node[:unicorn][:apps_dir]}/#{app_name}/#{dir}" do
       mode "0775"
       owner "#{node[:unicorn][:user]}"
