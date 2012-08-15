@@ -12,4 +12,4 @@ setuid <%= node[:unicorn][:user] %>
 setgid <%= node[:unicorn][:group] %>
 chdir <%= node[:unicorn][:apps_dir] %>/uploader.app
 
-exec /usr/local/bin/unicorn -c <%= node[:unicorn][:apps_dir] %>/uploader.app/unicorn.rb
+exec /usr/local/bin/unicorn_rails -c <%= node[:unicorn][:apps_dir] %>/uploader.app/unicorn.rb -E production 
