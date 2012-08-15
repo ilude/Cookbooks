@@ -7,8 +7,8 @@ server {
 
   include <%= @node[:nginx][:dir] %>/apps/server.*.conf;
 
-  location / {
-    root   /var/www/nginx-default;
-    index  index.html index.htm;
-  }
+  #location / {
+  #  root   /var/www/nginx-default;
+  #  index  index.html index.htm;
+  #}
 }
