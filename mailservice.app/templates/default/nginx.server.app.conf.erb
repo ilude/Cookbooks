@@ -1,0 +1,22 @@
+
+    server_name_in_redirect off;
+
+    location = /uploader {
+      return 301 $uri/;
+    }
+
+    location /uploader/ {
+      access_log  <%= node[:nginx][:log_dir] %>/access.uploader.log;
+      root <%= node[:unicorn][:apps_dir] %>/uploader.app/public;
+      rewrite ^/uploader/(.*)$ /$1 break;
+      try_files $uri $uri/index.html $uri/index.htm @uploader;
+    }
+
+    location @uploader {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+
+      # pass to the upstream unicorn server mentioned above
+      proxy_pass http://unicorn_uploader_service;
+    }

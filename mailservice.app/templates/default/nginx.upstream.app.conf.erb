@@ -1,0 +1,4 @@
+  upstream unicorn_uploader_service {
+    server unix:<%= node[:unicorn][:apps_dir] %>/uploader.app/tmp/sockets/unicorn.sock
+    fail_timeout=0;
+  }

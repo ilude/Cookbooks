@@ -1,0 +1,15 @@
+description "File Upload Site"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+respawn
+respawn limit 10 5
+console none
+
+
+setuid <%= node[:unicorn][:user] %>
+setgid <%= node[:unicorn][:group] %>
+chdir <%= node[:unicorn][:apps_dir] %>/uploader.app
+
+exec /usr/local/bin/unicorn -c <%= node[:unicorn][:apps_dir] %>/uploader.app/unicorn.rb
