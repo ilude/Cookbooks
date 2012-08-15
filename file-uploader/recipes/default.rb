@@ -48,7 +48,7 @@ end
 
 template "server.#{app_name}.conf" do
   path "#{node[:nginx][:dir]}/apps/server.#{app_name}.conf"
-  source "nginx.server.#{app_name}.conf.erb"
+  source "nginx.server.app.conf.erb"
   owner "root"
   group "root"
   mode "0644"
@@ -57,7 +57,7 @@ end
 
 template "upstream.#{app_name}.conf" do
   path "#{node[:nginx][:dir]}/apps/upstream.#{app_name}.conf"
-  source "nginx.upstream.#{app_name}.conf.erb"
+  source "nginx.upstream.app.conf.erb"
   owner "root"
   group "root"
   mode "0644"
@@ -66,7 +66,7 @@ end
 
 template "#{app_name}.conf" do
   path "/etc/init/#{app_name}.conf"
-  source "upstart.#{app_name}.conf.erb"
+  source "upstart.app.conf.erb"
   owner "root"
   group "root"
   mode "0644"
