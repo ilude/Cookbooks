@@ -52,12 +52,12 @@ template "server.#{app_name}.conf" do
   owner "root"
   group "root"
   mode "0644"
-  #notifies :restart, resources(:service => "nginx")
+  #notifies :reload, resources(:service => "nginx")
 end
 
 link "#{node[:nginx][:dir]}/sites-enabled/#{app_name}"  do
   to "#{node[:nginx][:dir]}/sites-available/#{app_name}"
-  notifies :restart, resources(:service => "nginx")
+  notifies :reload, resources(:service => "nginx")
 end
 
 template "#{app_name}.conf" do
@@ -71,7 +71,7 @@ end
 
 service app_name do
   provider Chef::Provider::Service::Upstart
-  action [:enable, :start, :stop, :restart]
+  action [:enable, :start]
 end
 
 cron "clean-files" do
