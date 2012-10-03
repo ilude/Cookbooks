@@ -1,0 +1,7 @@
+#!/bin/bash
+
+stop <%= @app_name %>
+#bundle install
+sudo -u unicorn rake assets:clean
+sudo -u unicorn rake assets:precompile
+start <%= @app_name %>
