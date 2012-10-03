@@ -1,28 +1,40 @@
 
-    server_name_in_redirect off;
+upstream unicorn_uploader_service {
+  server unix:<%= node[:unicorn][:apps_dir] %>/uploader.app/tmp/sockets/unicorn.sock
+  fail_timeout=0;
+}
 
-    location / {
-      access_log  <%= node[:nginx][:log_dir] %>/access.uploader.log;
-      root <%= node[:unicorn][:apps_dir] %>/uploader.app/public;
-      rewrite ^/uploader/(.*)$ /$1 break;
-      try_files $uri $uri/index.html $uri/index.htm @uploader;
-    }
+server {
+  listen   80;
+  server_name  upload-1;
 
-    location @uploader {
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header Host $http_host;
-      proxy_redirect off;
+  server_name_in_redirect off;
 
-      # pass to the upstream unicorn server mentioned above
-      proxy_pass http://unicorn_uploader_service;
-    }
+  location / {
+    access_log  <%= node[:nginx][:log_dir] %>/access.uploader.log;
+    root <%= node[:unicorn][:apps_dir] %>/uploader.app/public;
+    rewrite ^/uploader/(.*)$ /$1 break;
+    try_files $uri $uri/index.html $uri/index.htm @uploader;
+  }
 
-    # if the request is for a static resource, nginx should serve it directly
-    # and add a far future expires header to it, making the browser
-    # cache the resource and navigate faster over the website
-    # this probably needs some work with Rails 3.1's asset pipe_line
-    location ~ ^/(images|javascripts|stylesheets|system)/  {
-      root <%= node[:unicorn][:apps_dir] %>/uploader.app/public;
-      expires max;
-      break;
-    }
+  location @uploader {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+
+    # pass to the upstream unicorn server mentioned above
+    proxy_pass http://unicorn_uploader_service;
+  }
+
+  # if the request is for a static resource, nginx should serve it directly
+  # and add a far future expires header to it, making the browser
+  # cache the resource and navigate faster over the website
+  # this probably needs some work with Rails 3.1's asset pipe_line
+  location ~ ^/(images|javascripts|stylesheets|system)/  {
+    root <%= node[:unicorn][:apps_dir] %>/uploader.app/public;
+    expires max;
+    break;
+  }
+}
+
+  

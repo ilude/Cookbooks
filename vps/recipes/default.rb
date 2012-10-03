@@ -2,7 +2,7 @@ include_recipe "unicorn"
 
 gem_package "rails"
 
-app_name = "uploader.app"
+app_name = "vps"
 
 service app_name do
   provider Chef::Provider::Service::Upstart
@@ -10,7 +10,7 @@ service app_name do
 end
 
 host = "bitbucket.org"
-repo = "git@#{host}:ilude/npi-file-upload.git"
+repo = "git@#{host}:ilude/vps.git"
 known_hosts = "/root/.ssh/known_hosts"
 
 directory "/root/.ssh" do
@@ -36,6 +36,13 @@ execute "unicorn_owns_apps" do
   action :run
 end
 
+execute "bundler" do
+  command "bundle install"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  user node[:unicorn][:user]
+  action :run
+end
+
 %w{tmp/sockets tmp/pids log public/data}.each do |dir|
    directory "#{node[:unicorn][:apps_dir]}/#{app_name}/#{dir}" do
       mode "0775"
@@ -52,6 +59,9 @@ template "server.#{app_name}.conf" do
   owner "root"
   group "root"
   mode "0644"
+  variables(
+    :app_name => app_name
+  )
   notifies :reload, resources(:service => "nginx")
 end
 
@@ -66,6 +76,9 @@ template "#{app_name}.conf" do
   owner "root"
   group "root"
   mode "0644"
+  variables(
+    :app_name => app_name
+  )
   notifies :restart, resources(:service => app_name)
 end
 
