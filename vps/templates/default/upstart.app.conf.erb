@@ -1,4 +1,4 @@
-description "<%= app_name %> application"
+description "<%= @app_name %> application"
 
 start on (local-filesystems and net-device-up IFACE=eth0)
 stop on shutdown
@@ -10,6 +10,6 @@ console none
 
 setuid <%= node[:unicorn][:user] %>
 setgid <%= node[:unicorn][:group] %>
-chdir <%= node[:unicorn][:apps_dir] %>/<%= app_name %>
+chdir <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>
 
-exec /usr/local/bin/unicorn_rails -c <%= node[:unicorn][:apps_dir] %>/<%= app_name %>/unicorn.rb -E production 
+exec /usr/local/bin/unicorn_rails -c <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/unicorn.rb -E production 

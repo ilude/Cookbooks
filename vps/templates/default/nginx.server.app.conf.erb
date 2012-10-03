@@ -1,15 +1,15 @@
 
-upstream unicorn_<%= app_name %>_service {
-  server unix:<%= node[:unicorn][:apps_dir] %>/<%= app_name %>/tmp/sockets/unicorn.sock
+upstream unicorn_<%= @app_name %>_service {
+  server unix:<%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/tmp/sockets/unicorn.sock
   fail_timeout=0;
 }
 
 server {
   listen   80;
-  server_name  <%= app_name %>;
+  server_name  <%= @app_name %>;
   server_name_in_redirect off;
-  access_log  <%= node[:unicorn][:apps_dir] %>/<%= app_name %>/log/access.nginx.log;
-  root <%= node[:unicorn][:apps_dir] %>/<%= app_name %>/public;
+  access_log  <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/access.nginx.log;
+  root <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/public;
 
   location ~ ^/(assets)/  {
     gzip_static on;
@@ -41,7 +41,7 @@ server {
     proxy_redirect off;
 
     # pass to the upstream unicorn server mentioned above
-    proxy_pass http://unicorn_<%= app_name %>_service;
+    proxy_pass http://unicorn_<%= @app_name %>_service;
   }
 }
 
