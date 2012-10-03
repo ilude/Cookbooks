@@ -1,11 +1,7 @@
 
-include <%= @node[:nginx][:dir] %>/apps/upstream.*.conf;
-
 server {
   listen   80;
   server_name  <%= @node[:hostname] %>;
-
-  include <%= @node[:nginx][:dir] %>/apps/server.*.conf;
 
   #location / {
   #  root   /var/www/nginx-default;
