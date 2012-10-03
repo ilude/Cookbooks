@@ -39,7 +39,6 @@ end
 execute "bundler" do
   command "bundle install"
   cwd File.join(node[:unicorn][:apps_dir], app_name)
-  user node[:unicorn][:user]
   action :run
 end
 
