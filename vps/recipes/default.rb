@@ -1,8 +1,38 @@
 include_recipe "unicorn"
 
+app_name = "vps"
+
 gem_package "rails"
 
-app_name = "vps"
+#### Begin Loftware Setup #### 
+
+package "smbfs" do
+  action :install
+end
+
+loftware_mount = "//zeus/Vdrive/Visual/VMFG/WDDrop        /mnt/loftware   cifs credentials=/root/.smbcredentials 0 0"
+
+template ".smbcredentials" do
+  path "/root/.smbcredentials"
+  source "smbcredentials.erb"
+  owner "root"
+  group "root"
+  mode "0600"
+end
+
+directory "/mnt/loftware" do
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0755"
+  action :create
+end
+
+execute "mount_loftware" do
+  command "echo \"#{loftware_mount}\" >> /etc/fstab; mount -a"
+  not_if { File.read("/etc/fstab").include?(loftware_mount) }
+end
+
+#### End Loftware Setup #### 
 
 service app_name do
   provider Chef::Provider::Service::Upstart
