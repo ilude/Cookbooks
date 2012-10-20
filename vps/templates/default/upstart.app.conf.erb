@@ -7,14 +7,8 @@ respawn
 respawn limit 10 5
 console none
 
-
 setuid <%= node[:unicorn][:user] %>
 setgid <%= node[:unicorn][:group] %>
 chdir <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>
-
-pre-start script
-    sudo -u unicorn rake assets:clean
-    sudo -u unicorn rake assets:precompile
-end script
 
 exec /usr/local/bin/unicorn_rails -c <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/unicorn.rb -E production 
