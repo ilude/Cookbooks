@@ -35,7 +35,7 @@ mount "/mnt/loftware" do
 end
 
 mount "/apps/vps/public/images/parts" do
-  device "//npi-bignas/YDrive/image_parts"
+  device "//npi-bignas/YDrive/images_part"
   fstype "cifs"
   options "credentials=/root/.smbcredentials"
   dump 0
@@ -44,7 +44,7 @@ mount "/apps/vps/public/images/parts" do
 end
 
 mount "/apps/vps/public/images/locations" do
-  device "//npi-bignas/YDrive/image_locations"
+  device "//npi-bignas/YDrive/images_location"
   fstype "cifs"
   options "credentials=/root/.smbcredentials"
   dump 0
