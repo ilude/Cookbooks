@@ -92,6 +92,18 @@ execute "bundler" do
   action :run
 end
 
+execute "assets clean" do
+  command "sudo -u unicorn rake assets:clean"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  action :run
+end
+
+execute "assets precompile" do
+  command "sudo -u unicorn rake assets:precompile"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  action :run
+end
+
 %w{tmp/sockets tmp/pids log public/data}.each do |dir|
    directory "#{node[:unicorn][:apps_dir]}/#{app_name}/#{dir}" do
       mode "0775"
