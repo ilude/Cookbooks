@@ -10,8 +10,6 @@ package "smbfs" do
   action :install
 end
 
-loftware_mount = "//zeus/Vdrive/Visual/VMFG/WDDrop        /mnt/loftware   cifs credentials=/root/.smbcredentials 0 0"
-
 template ".smbcredentials" do
   path "/root/.smbcredentials"
   source "smbcredentials.erb"
@@ -27,9 +25,31 @@ directory "/mnt/loftware" do
   action :create
 end
 
-execute "mount_loftware" do
-  command "echo \"#{loftware_mount}\" >> /etc/fstab; mount -a"
-  not_if { File.read("/etc/fstab").include?(loftware_mount) }
+mount "/mnt/loftware" do
+  device "//zeus/Vdrive/Visual/VMFG/WDDrop"
+  fstype "cifs"
+  options "credentials=/root/.smbcredentials"
+  dump 0
+  pass 0
+  action [:mount, :enable]
+end
+
+mount "/apps/vps/public/images/parts" do
+  device "//npi-bignas/YDrive/images_parts"
+  fstype "cifs"
+  options "credentials=/root/.smbcredentials"
+  dump 0
+  pass 0
+  action [:mount, :enable]
+end
+
+mount "/apps/vps/public/images/locations" do
+  device "//npi-bignas/YDrive/images_locations"
+  fstype "cifs"
+  options "credentials=/root/.smbcredentials"
+  dump 0
+  pass 0
+  action [:mount, :enable]
 end
 
 #### End Loftware Setup #### 
