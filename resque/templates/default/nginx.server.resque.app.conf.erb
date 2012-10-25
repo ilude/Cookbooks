@@ -1,3 +1,13 @@
+  upstream unicorn_<%= node[:resque_web][:service_name] %>_service {
+    server unix:<%= node[:unicorn][:apps_dir] %>/<%= node[:resque_web][:app_name] %>/tmp/sockets/unicorn.sock
+    fail_timeout=0;
+  }
+
+server {
+  listen   80;
+  server_name _;
+
+  server_name_in_redirect off;
 
   location = /<%= node[:resque_web][:service_name] %> {
     return 301 $uri/;
@@ -19,3 +29,4 @@
     # pass to the upstream unicorn server mentioned above
     proxy_pass http://unicorn_<%= node[:resque_web][:service_name] %>_service;
   }
+}

@@ -20,11 +20,15 @@ end
 end
 
 template "server.#{app_name}.conf" do
-  path "#{node[:nginx][:dir]}/apps/server.#{app_name}.conf"
+  path "#{node[:nginx][:dir]}/sites-available/#{app_name}"
   source "nginx.server.#{app_name}.conf.erb"
   owner "root"
   group "root"
   mode "0644"
+end
+
+link "#{node[:nginx][:dir]}/sites-enabled/#{app_name}"  do
+  to "#{node[:nginx][:dir]}/sites-available/#{app_name}"
   notifies :reload, resources(:service => "nginx")
 end
 
@@ -34,6 +38,7 @@ template "config.ru" do
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
   mode "0644"
+  notifies :restart, resources(:service => app_name)
 end
 
 template "unicorn.rb" do
@@ -42,23 +47,7 @@ template "unicorn.rb" do
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
   mode "0644"
-end
-
-template "script_name.rb" do
-  path "#{node[:unicorn][:apps_dir]}/#{app_name}/script_name.rb"
-  source "script_name.rb.erb"
-  owner node[:unicorn][:user]
-  group node[:unicorn][:group]
-  mode "0644"
-end
-
-template "upstream.#{app_name}.conf" do
-  path "#{node[:nginx][:dir]}/apps/upstream.#{app_name}.conf"
-  source "nginx.upstream.#{app_name}.conf.erb"
-  owner "root"
-  group "root"
-  mode "0644"
-  notifies :reload, resources(:service => "nginx")
+  notifies :restart, resources(:service => app_name)
 end
 
 template "#{app_name}.conf" do

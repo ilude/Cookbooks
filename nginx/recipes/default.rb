@@ -1,4 +1,11 @@
-package "python-software-properties"
+package "add-apt-repository" do
+  package_name value_for_platform(
+    "ubuntu" => {
+      "12.10" => "software-properties-common"
+    },
+    "default" => "python-software-properties"
+  )
+end
 
 execute "add-apt-repository" do
   command "add-apt-repository ppa:nginx/stable && apt-get update"

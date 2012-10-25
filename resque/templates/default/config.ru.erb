@@ -1,19 +1,39 @@
 #!/usr/bin/env ruby
-require 'logger'
-require './script_name'
+require "logger"
 
-$LOAD_PATH.unshift ::File.expand_path(::File.dirname(__FILE__) + '/lib')
-require 'resque/server'
+$LOAD_PATH.unshift ::File.expand_path(::File.dirname(__FILE__) + "/lib")
+require "resque/server"
 
-# Set the RESQUECONFIG env variable if you've a `resque.rb` or similar
+# Set the RESQUECONFIG env variable if youve a `resque.rb` or similar
 # config file you want loaded on boot.
-#if ENV['RESQUECONFIG'] && ::File.exists?(::File.expand_path(ENV['RESQUECONFIG']))
-#  load ::File.expand_path(ENV['RESQUECONFIG'])
-#end
+if ENV["RESQUECONFIG"] && ::File.exists?(::File.expand_path(ENV["RESQUECONFIG"]))
+        load ::File.expand_path(ENV["RESQUECONFIG"])
+end
 
 #Resque::Server.use Rack::Auth::Basic do |username, password|
 #  password == 'super-secret-password'
 #end
+
+class ScriptName
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    #puts "pre path: #{env["PATH_INFO"]}"
+    #puts "pre name: #{env["SCRIPT_NAME"]}"
+
+    if env["PATH_INFO"] =~ /^\/<%= node[:resque_web][:service_name] %>/
+       env["PATH_INFO"].sub!(/^\/<%= node[:resque_web][:service_name] %>/, '')
+       env['SCRIPT_NAME'] = '/<%= node[:resque_web][:service_name] %>'
+    end
+
+    #puts "post path: #{env["PATH_INFO"]}"
+    #puts "post name: #{env["SCRIPT_NAME"]}"
+
+    @app.call(env)
+  end
+end
 
 use ScriptName
 use Rack::ShowExceptions

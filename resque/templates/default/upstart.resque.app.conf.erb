@@ -10,6 +10,6 @@ console none
 
 setuid <%= node[:unicorn][:user] %>
 setgid <%= node[:unicorn][:group] %>
-chdir <%= node[:unicorn][:apps_dir] %>/resque.app
+chdir <%= node[:unicorn][:apps_dir] %>/<%= node[:resque_web][:app_name] %>
 
 exec /usr/local/bin/unicorn -c <%= node[:unicorn][:apps_dir] %>/<%= node[:resque_web][:app_name] %>/unicorn.rb
