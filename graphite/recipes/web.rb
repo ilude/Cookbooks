@@ -34,8 +34,37 @@ template "graphite" do
   mode "0644"
 end
 
+template "graphite.wsgi" do
+  path "/opt/graphite/conf/graphite.wsgi"
+  source "graphite.wsgi.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
 link "/etc/apache2/sites-enabled/graphite"  do
   to "/etc/apache2/sites-available/graphite"
+  notifies :restart, "service[apache2]"
+end
+
+link "/etc/apache2/mods-enabled/ssl.conf" do
+  to "../mods-available/ssl.conf"
+  notifies :restart, "service[apache2]"
+end
+
+link "/etc/apache2/mods-enabled/ssl.load" do
+  to "../mods-available/ssl.load"
+  notifies :restart, "service[apache2]"
+end
+
+link "/etc/apache2/mods-enabled/wsgi.conf" do
+  to "../mods-available/wsgi.conf"
+  notifies :restart, "service[apache2]"
+end
+
+link "/etc/apache2/mods-enabled/wsgi.load" do
+  to "../mods-available/wsgi.load"
+  notifies :restart, "service[apache2]"
 end
 
 directory "#{basedir}/storage" do

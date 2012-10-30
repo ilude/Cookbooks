@@ -19,7 +19,7 @@ template "#{node['graphite']['base_dir']}/conf/carbon.conf" do
   variables( :line_receiver_interface => '127.0.0.1',
              :pickle_receiver_interface => '127.0.0.1',
              :cache_query_interface => '127.0.0.1' )
-  notifies :restart, "service[carbon-cache]"
+  #notifies :restart, "service[carbon-cache]"
 end
 
 template "#{node['graphite']['base_dir']}/conf/storage-schemas.conf" do
