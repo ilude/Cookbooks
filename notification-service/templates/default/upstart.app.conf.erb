@@ -1,0 +1,14 @@
+description "Notification Resque Workers"
+
+start on starting redis
+stop on stopped redis
+
+respawn
+respawn limit 10 5
+console none
+
+setuid <%= node[:unicorn][:user] %>
+setgid <%= node[:unicorn][:group] %>
+
+chdir <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>
+exec /usr/local/bin/rake environment resque:work QUEUE=* PIDFILE=<%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/tmp/pids/resque.pid  RAILS_ENV=production >> <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/resque.log 2>&1
