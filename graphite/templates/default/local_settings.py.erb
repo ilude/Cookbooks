@@ -142,8 +142,8 @@ DATABASES = {
     'default': {
         'NAME': '/opt/graphite/storage/graphite.db',
         'ENGINE': 'django.db.backends.sqlite3',
-        'USER': '',
-        'PASSWORD': '',
+        'USER': '<%= node['graphite']['username'] %>',
+        'PASSWORD': '<%= node['graphite']['password'] %>',
         'HOST': '',
         'PORT': ''
     }

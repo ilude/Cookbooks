@@ -14,15 +14,18 @@ package "python-zope.interface"
 
 basedir = node['graphite']['base_dir']
 source_path = "/tmp/graphite-web"
+version = "0.9.10"
+
 git source_path do
   repository "https://github.com/graphite-project/graphite-web.git"
-  reference "0.9.10"
+  reference version
   action :sync
 end
 
 execute "install graphite-web" do
   command "python setup.py install"
   cwd source_path
+  not_if Dir.glob("graphite_web-#{version}-py*.egg-info").length > 0
   action :run
 end
 
@@ -84,25 +87,18 @@ end
   end
 end
 
-template "#{basedir}/bin/set_admin_passwd.py" do
-  source "set_admin_passwd.py.erb"
-  mode 00755
-end
-
-cookbook_file "#{basedir}/storage/graphite.db" do
-  action :create_if_missing
-  notifies :run, "execute[set admin password]"
-end
-
-execute "set admin password" do
-  command "#{basedir}/bin/set_admin_passwd.py #{node['graphite']['username']} #{node['graphite']['password']}"
-  action :nothing
-end
-
 file "#{basedir}/storage/graphite.db" do
   owner 'www-data'
   group 'www-data'
   mode 00644
+end
+
+template "local_settings.py" do
+  path "/opt/graphite/webapp/graphite/local_settings.py"
+  source "local_settings.py.erb"
+  owner "www-data"
+  group "www-data"
+  mode "0644"
 end
 
 service "apache2" do
