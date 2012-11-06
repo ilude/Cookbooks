@@ -24,6 +24,14 @@ execute "add_known_host" do
   not_if { File.exists?(known_hosts) && File.read(known_hosts).include?(host) }
 end
 
+file "/root/.ssh/id_rsa" do
+  content node['deploy_key']
+  owner "root"
+  group "root"
+  mode 0600
+  action :create_if_missing
+end
+
 git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
   repository repo
   reference "master"
