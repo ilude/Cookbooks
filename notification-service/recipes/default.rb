@@ -1,6 +1,8 @@
 include_recipe "resque"
 include_recipe "unicorn"
 
+package "freetds-dev"
+
 app_name = "notification-service"
 
 service app_name do
