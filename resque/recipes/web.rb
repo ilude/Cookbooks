@@ -29,7 +29,7 @@ end
 
 link "#{node[:nginx][:dir]}/sites-enabled/#{app_name}"  do
   to "#{node[:nginx][:dir]}/sites-available/#{app_name}"
-  notifies :reload, resources(:service => "nginx")
+  notifies :restart, resources(:service => "nginx")
 end
 
 template "config.ru" do

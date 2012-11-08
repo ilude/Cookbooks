@@ -40,10 +40,8 @@ template "nginx.conf" do
   owner "root"
   group "root"
   mode 0644
-  notifies :reload, resources(:service => "nginx")
+  notifies :restart, resources(:service => "nginx")
 end
-
-
 
 template "default-site" do
   path "#{node[:nginx][:dir]}/sites-available/default-site"
@@ -51,7 +49,7 @@ template "default-site" do
   owner "root"
   group "root"
   mode 0644
-  notifies :reload, resources(:service => "nginx")
+  notifies :restart, resources(:service => "nginx")
 end
 
 directory "#{node[:nginx][:dir]}/apps" do
@@ -64,12 +62,12 @@ end
 file "#{node[:nginx][:dir]}/sites-enabled/default" do
   action :delete
   only_if { File.exist?("#{node[:nginx][:dir]}/sites-enabled/default") }
-  notifies :reload, resources(:service => "nginx")
+  notifies :restart, resources(:service => "nginx")
 end
 
 link "#{node[:nginx][:dir]}/sites-enabled/default-site" do
   to "#{node[:nginx][:dir]}/sites-available/default-site"
-  notifies :reload, resources(:service => "nginx")
+  notifies :restart, resources(:service => "nginx")
 end
 
 service "nginx" do
