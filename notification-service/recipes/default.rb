@@ -10,6 +10,13 @@ service app_name do
   supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
 end
 
+service "notification-loader" do
+  provider Chef::Provider::Service::Upstart
+  supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
+end
+
+notification-loader
+
 host = "bitbucket.org"
 repo = "git@#{host}:ilude/npi-notification-service.git"
 known_hosts = "/root/.ssh/known_hosts"
@@ -79,7 +86,24 @@ template "#{app_name}.conf" do
   notifies :restart, resources(:service => app_name)
 end
 
+template "notification-loader.conf" do
+  path "/etc/init/notification-loader.conf"
+  source "upstart.notification-loader.conf.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  variables(
+    :app_name => app_name
+  )
+  notifies :restart, resources(:service => "notification-loader")
+end
+
 service app_name do
+  provider Chef::Provider::Service::Upstart
+  action [:enable, :start]
+end
+
+service "notification-loader" do
   provider Chef::Provider::Service::Upstart
   action [:enable, :start]
 end

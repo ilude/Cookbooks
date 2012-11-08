@@ -1,0 +1,16 @@
+description "Notification Loader"
+
+start on starting redis
+stop on stopped redis
+
+respawn
+respawn limit 10 5
+console none
+
+setuid <%= node[:unicorn][:user] %>
+setgid <%= node[:unicorn][:group] %>
+
+expect daemon
+
+chdir <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>
+exec  script/daemon start notification_loader RAILS_ENV=<%= node['notification-service'][:environment] %> >> /apps/notification-service/log/loader.log 2>&1
