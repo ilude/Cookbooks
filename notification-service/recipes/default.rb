@@ -15,8 +15,6 @@ service "notification-loader" do
   supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
 end
 
-notification-loader
-
 host = "bitbucket.org"
 repo = "git@#{host}:ilude/npi-notification-service.git"
 known_hosts = "/root/.ssh/known_hosts"
