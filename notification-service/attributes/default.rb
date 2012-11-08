@@ -1,0 +1,1 @@
+default['notification-service'][:environment]  = "production"

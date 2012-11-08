@@ -55,6 +55,12 @@ execute "unicorn_owns_apps" do
   action :run
 end
 
+file "#{node[:unicorn][:apps_dir]}/#{app_name}/script/daemon" do
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0775"
+end
+
 execute "bundler" do
   command "bundle install"
   cwd File.join(node[:unicorn][:apps_dir], app_name)
