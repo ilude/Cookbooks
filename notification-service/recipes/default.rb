@@ -74,7 +74,7 @@ end
 
 template "#{app_name}.conf" do
   path "/etc/init/#{app_name}.conf"
-  source "upstart.app.conf.erb"
+  source "upstart.#{app_name}.conf.erb"
   owner "root"
   group "root"
   mode "0644"
