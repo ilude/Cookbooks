@@ -10,7 +10,7 @@ service app_name do
 end
 
 host = "bitbucket.org"
-repo = "git@#{host}:ilude/npi-file-upload.git"
+repo = "git@#{host}:rammounts/file-upload.git"
 known_hosts = "/root/.ssh/known_hosts"
 
 directory "/root/.ssh" do

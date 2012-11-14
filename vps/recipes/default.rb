@@ -12,7 +12,7 @@ service app_name do
 end
 
 host = "bitbucket.org"
-repo = "git@#{host}:ilude/vps.git"
+repo = "git@#{host}:rammounts/vps.git"
 known_hosts = "/root/.ssh/known_hosts"
 
 directory "/root/.ssh" do

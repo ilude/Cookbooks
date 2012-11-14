@@ -16,7 +16,7 @@ service "notification-loader" do
 end
 
 host = "bitbucket.org"
-repo = "git@#{host}:ilude/npi-notification-service.git"
+repo = "git@#{host}:rammounts/notification-service.git"
 known_hosts = "/root/.ssh/known_hosts"
 
 directory "/root/.ssh" do
