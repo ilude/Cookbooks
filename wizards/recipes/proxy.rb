@@ -4,6 +4,22 @@ include_recipe "nginx"
 
 app_name = "wizard"
 
+directory "/var/cache/www/tmp" do
+  mode "0775"
+  owner "#{node[:nginx][:user]}"
+  group "#{node[:nginx][:group]}"
+  action :create
+  recursive true
+end
+
+directory "/var/cache/www/#{app_name}" do
+  mode "0775"
+  owner "#{node[:nginx][:user]}"
+  group "#{node[:nginx][:group]}"
+  action :create
+  recursive true
+end
+
 template "nginx.proxy.server.conf" do
   path "#{node[:nginx][:dir]}/sites-available/#{app_name}"
   source "nginx.proxy.server.conf.erb"
