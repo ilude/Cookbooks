@@ -77,5 +77,5 @@ end
 cron "clean-files" do
   hour "3"
   minute "0"
-  command "find #{node[:unicorn][:apps_dir]}/#{app_name}/public/data/ -mtime +14 -exec rm {} \\;"
+  command "find #{node[:unicorn][:apps_dir]}/#{app_name}/public/data -type f -mtime +14 -exec rm {} \\;"
 end
