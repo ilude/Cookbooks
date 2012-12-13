@@ -1,6 +1,7 @@
 include_recipe "ssmtp"
 
-package "tmux" 
+package "curl"
+package "tmux"
 
 #execute "add_aliases" do
 # command "echo alias l=\'ls -la\' >> /etc/bash.bashrc"

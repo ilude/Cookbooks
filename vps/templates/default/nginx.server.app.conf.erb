@@ -6,7 +6,7 @@ upstream unicorn_<%= @app_name %>_service {
 
 server {
   listen   80;
-  server_name  <%= @app_name %>.rammount.com;
+  server_name  <%= node[:vps][:server_name] %>;
   server_name_in_redirect off;
   access_log  <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/access.nginx.log;
   root <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/public;

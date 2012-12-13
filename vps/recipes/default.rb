@@ -1,10 +1,11 @@
 include_recipe "unicorn"
 
-app_name = "vps"
+package "nodejs" # needed for javascript runtime
+package "freetds-dev"
 
 gem_package "rails"
 
-include_recipe "vps::smbmount"
+app_name = "vps"
 
 service app_name do
   provider Chef::Provider::Service::Upstart
@@ -13,17 +14,12 @@ end
 
 host = "bitbucket.org"
 repo = "git@#{host}:rammounts/vps.git"
-known_hosts = "/root/.ssh/known_hosts"
-
-directory "/root/.ssh" do
-  owner "root"
-  group "root"
-  mode "0700"
-  action :create
-end
+known_hosts = "/home/#{node[:unicorn][:user]}/.ssh/known_hosts"
 
 execute "add_known_host" do
   command "ssh-keyscan -t rsa #{host} >> #{known_hosts}"
+  user node[:unicorn][:user]
+  group node[:unicorn][:group]
   not_if { File.exists?(known_hosts) && File.read(known_hosts).include?(host) }
 end
 
@@ -31,11 +27,8 @@ git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
   repository repo
   reference "master"
   action :sync
-end
-
-execute "unicorn_owns_apps" do
-  command "chown -R #{node[:unicorn][:user]}:#{node[:unicorn][:group]} #{node[:unicorn][:apps_dir]}/#{app_name}"
-  action :run
+  user node[:unicorn][:user]
+  group node[:unicorn][:group]
 end
 
 execute "bundler" do
@@ -45,13 +38,13 @@ execute "bundler" do
 end
 
 execute "assets clean" do
-  command "sudo -u unicorn bundle exec rake assets:clean"
+  command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:clean"
   cwd File.join(node[:unicorn][:apps_dir], app_name)
   action :run
 end
 
 execute "assets precompile" do
-  command "sudo -u unicorn bundle exec rake assets:precompile"
+  command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:precompile"
   cwd File.join(node[:unicorn][:apps_dir], app_name)
   action :run
 end
@@ -80,7 +73,13 @@ end
 
 link "#{node[:nginx][:dir]}/sites-enabled/#{app_name}"  do
   to "#{node[:nginx][:dir]}/sites-available/#{app_name}"
-  notifies :reload, resources(:service => "nginx")
+  notifies :restart, resources(:service => "nginx")
+end
+
+link "#{node[:nginx][:dir]}/sites-enabled/default-site" do
+  action :delete
+  only_if { node[:vps][:server_name].eql? "_" }
+  notifies :restart, resources(:service => "nginx")
 end
 
 template "#{app_name}.conf" do
@@ -94,6 +93,8 @@ template "#{app_name}.conf" do
   )
   notifies :restart, resources(:service => app_name)
 end
+
+include_recipe "vps::smbmount"
 
 service app_name do
   provider Chef::Provider::Service::Upstart

@@ -1,12 +1,16 @@
-default[:elasticsearch][:config_dir]  = "/etc/elasticsearch"
-default[:elasticsearch][:install_dir] = "/opt/elasticsearch"
-default[:elasticsearch][:data_dir]    = "/opt/elasticsearch/data"
+default[:elasticsearch][:dir]         = "/opt"
+default[:elasticsearch][:install_dir] = "#{default[:elasticsearch][:dir]}/elasticsearch"
+default[:elasticsearch][:data_dir]    = "#{default[:elasticsearch][:dir]}/elasticsearch/data"
+default[:elasticsearch][:config_dir]  = "#{default[:elasticsearch][:dir]}/elasticsearch/config"
 default[:elasticsearch][:log_dir]     = "/var/log/elasticsearch"
 
+default[:elasticsearch][:user]            = "elasticsearch"
 default[:elasticsearch][:http][:enabled]  = true
 default[:elasticsearch][:http][:port]     = 9200
 default[:elasticsearch][:http][:max_content_length] = "100mb"
 
+allocated_memory = "#{(node.memory.total.to_i * 0.6 ).floor / 1024}m"
+default.elasticsearch[:allocated_memory] = allocated_memory
 default[:elasticsearch][:bootstrap][:mlockall] = true
 
 default[:elasticsearch][:index][:number_of_shards] = 1   # Development values
@@ -22,7 +26,7 @@ default[:elasticsearch][:data]   = true
 default[:elasticsearch][:network][:bind_host] = "_local_"
 default[:elasticsearch][:network][:publish_host] = "_local_"
 # specify 'host' to set both 'bind_host' and 'publish_host' as the same value
-default[:elasticsearch][:network][:host] = nil
+default[:elasticsearch][:network][:host] = "localhost"
 
 # Discovery
 default[:elasticsearch][:discovery][:zen][:minimum_master_nodes] = 1

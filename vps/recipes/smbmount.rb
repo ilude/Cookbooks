@@ -1,4 +1,10 @@
 package "smbfs" do
+  package_name value_for_platform(
+    "ubuntu" => {
+      "12.10" => "cifs-utils"
+    },
+    "default" => "smbfs"
+  )
   action :install
 end
 
@@ -18,7 +24,7 @@ directory "/mnt/loftware" do
 end
 
 mount "/mnt/loftware" do
-  device "//zeus/Vdrive/Visual/VMFG/WDDrop"
+  device "//#{node[:smb][:print_server]}/Vdrive/Visual/VMFG/WDDrop"
   fstype "cifs"
   options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
   dump 0
@@ -26,8 +32,18 @@ mount "/mnt/loftware" do
   action [:mount, :enable]
 end
 
+["#{node[:unicorn][:apps_dir]}/vps/public/images/parts", "#{node[:unicorn][:apps_dir]}/vps/public/images/locations"].each do |path|
+  directory path do
+    owner node[:unicorn][:user]
+    group node[:unicorn][:group]
+    mode 0755
+    recursive true
+    action :create
+  end
+end
+
 mount "#{node[:unicorn][:apps_dir]}/vps/public/images/parts" do
-  device "//npi-bignas/YDrive/images_part"
+  device "//#{node[:smb][:image_server]}/YDrive/images_part"
   fstype "cifs"
   options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
   dump 0
@@ -36,7 +52,7 @@ mount "#{node[:unicorn][:apps_dir]}/vps/public/images/parts" do
 end
 
 mount "#{node[:unicorn][:apps_dir]}/vps/public/images/locations" do
-  device "//npi-bignas/YDrive/images_location"
+  device "//#{node[:smb][:image_server]}/YDrive/images_location"
   fstype "cifs"
   options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
   dump 0
