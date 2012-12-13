@@ -100,3 +100,9 @@ service app_name do
   provider Chef::Provider::Service::Upstart
   action [:enable, :start]
 end
+
+cron "update requirement index" do
+  hour "3"
+  minute "0"
+  command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; bundle exec ruby script/load.rb"
+end
