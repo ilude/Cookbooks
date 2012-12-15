@@ -13,8 +13,8 @@ allocated_memory = "#{(node.memory.total.to_i * 0.6 ).floor / 1024}m"
 default.elasticsearch[:allocated_memory] = allocated_memory
 default[:elasticsearch][:bootstrap][:mlockall] = true
 
-default[:elasticsearch][:index][:number_of_shards] = 1   # Development values
-default[:elasticsearch][:index][:number_of_replicas] = 0
+default[:elasticsearch][:index][:number_of_shards] = 5   # Development values
+default[:elasticsearch][:index][:number_of_replicas] = 1
 
 default[:elasticsearch][:cluster_name]= "default"
 default[:elasticsearch][:log_level]   = "DEBUG"
