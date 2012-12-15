@@ -37,11 +37,11 @@ execute "bundler" do
   action :run
 end
 
-execute "assets clean" do
-  command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:clean"
-  cwd File.join(node[:unicorn][:apps_dir], app_name)
-  action :run
-end
+# execute "assets clean" do
+#   command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:clean"
+#   cwd File.join(node[:unicorn][:apps_dir], app_name)
+#   action :run
+# end
 
 execute "assets precompile" do
   command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:precompile"
