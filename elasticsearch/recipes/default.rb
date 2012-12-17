@@ -75,7 +75,6 @@ end
 
 
 # Make sure the service is started
-#
 service("elasticsearch") { action :start }
 
 # Write config files

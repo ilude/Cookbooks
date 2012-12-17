@@ -8,26 +8,11 @@ path:
   conf:   <%= @node[:elasticsearch][:config_dir] %>
   logs:   <%= @node[:elasticsearch][:log_dir] %>
   data:   <%= @node[:elasticsearch][:data_dir] %>
-
-node:
-  <% if @node[:elasticsearch][:master] %>
-  master: true
-  <% end %>
-  <% if @node[:elasticsearch][:data] %>
-  data:  true
-  <% end %>
   
 http:
   enabled: <%= @node[:elasticsearch][:http][:enabled] %>
   port: <%= @node[:elasticsearch][:http][:port] %>
   max_content_length: <%= @node[:elasticsearch][:http][:max_content_length] %>
-
-# Set gateway.type to one of: [none, local, fs, hadoop, s3]
-gateway:
-  type: local
-  recover_after_nodes: 1
-  recover_after_time: 5m
-  expected_nodes: 1     
 
 # Discovery
 <% if @node[:elasticsearch][:discovery][:zen][:ping][:multicast][:enabled] %>
@@ -50,10 +35,6 @@ bootstrap:
   # You should also make sure that the ElasticSearch process is allowed to lock
   # the memory, eg. by using `ulimit -l unlimited`.
   mlockall: <%= @node[:elasticsearch][:bootstrap][:mlockall] %>
-    
-index:
-  number_of_shards:  <%= @node[:elasticsearch][:index][:number_of_shards] %>
-  number_of_replicas: <%= @node[:elasticsearch][:index][:number_of_replicas] %>
 
 <% if @node[:elasticsearch][:network][:host] %>
 network.host: <%= @node[:elasticsearch][:network][:host] %>
