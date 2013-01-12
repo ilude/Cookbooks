@@ -17,14 +17,7 @@ end
 
 host = "bitbucket.org"
 repo = "git@#{host}:rammounts/notification-service.git"
-known_hosts = "/root/.ssh/known_hosts"
-
-directory "/root/.ssh" do
-  owner "root"
-  group "root"
-  mode "0700"
-  action :create
-end
+known_hosts = "/etc/ssh/ssh_known_hosts"
 
 execute "add_known_host" do
   command "ssh-keyscan -t rsa #{host} >> #{known_hosts}"
@@ -35,6 +28,8 @@ git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
   repository repo
   reference "master"
   action :sync
+  user node[:unicorn][:user]
+  group node[:unicorn][:group]
 end
 
 %w{tmp/sockets tmp/pids log public/data}.each do |dir|
@@ -45,11 +40,6 @@ end
       action :create
       recursive true
    end
-end
-
-execute "unicorn_owns_apps" do
-  command "chown -R #{node[:unicorn][:user]}:#{node[:unicorn][:group]} #{node[:unicorn][:apps_dir]}/#{app_name}"
-  action :run
 end
 
 file "#{node[:unicorn][:apps_dir]}/#{app_name}/script/daemon" do
@@ -63,6 +53,12 @@ execute "bundler" do
   cwd File.join(node[:unicorn][:apps_dir], app_name)
   action :run
 end
+
+# execute "assets precompile" do
+#   command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:precompile"
+#   cwd File.join(node[:unicorn][:apps_dir], app_name)
+#   action :run
+# end
 
 template "#{app_name}.conf" do
   path "/etc/init/#{app_name}.conf"

@@ -2,8 +2,26 @@ include_recipe "nginx"
 
 gem_package "unicorn"
 
-home = "/home/#{node[:unicorn][:user]}"
+def add_known_host(hosts, user, group = user)
+  
+end
 
+directory "/root/.ssh" do
+  owner "root"
+  group "root"
+  mode "0700"
+  action :create
+end
+
+file "/root/.ssh/id_rsa" do
+  content node['deploy_key']
+  owner "root"
+  group "root"
+  mode 0600
+  action :create_if_missing
+end 
+
+home = "/home/#{node[:unicorn][:user]}"
 
 execute "Delete User #{node[:unicorn][:user]}" do
   command "userdel -f #{node[:unicorn][:user]}"
@@ -20,7 +38,6 @@ user node[:unicorn][:user] do
 
   comment "Unicorn User"
   home    home
-  shell   "/bin/false"
   gid     node[:unicorn][:group]
   supports :manage_home => true
   action  :create
