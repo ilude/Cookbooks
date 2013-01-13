@@ -1,5 +1,6 @@
 include_recipe "resque"
 include_recipe "unicorn"
+include_recipe "wkhtmltopdf"
 
 package "freetds-dev"
 
