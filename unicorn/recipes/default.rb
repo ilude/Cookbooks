@@ -63,7 +63,6 @@ file "#{home}/.ssh/authorized_keys" do
   group node[:unicorn][:group]
   mode 0600
   action :create_if_missing
-  only_if node['authorize_key']
 end 
 
 directory "#{node[:unicorn][:apps_dir]}" do
