@@ -13,5 +13,6 @@ setgid <%= node[:unicorn][:group] %>
 expect daemon
 
 chdir <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>
-env RAILS_ENV=<%= node['notification-service'][:environment] %>
-exec script/daemon start notification_loader >> /apps/notification-service/log/loader.log 2>&1
+env RAILS_ENV=<%= node['notification-service'][:environment] %> 
+
+exec script/daemon start notification_loader >> <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/loader.log 2>&1

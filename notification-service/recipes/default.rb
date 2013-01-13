@@ -48,8 +48,16 @@ file "#{node[:unicorn][:apps_dir]}/#{app_name}/script/daemon" do
   mode "0775"
 end
 
-execute "bundler" do
+execute "system bundler" do
   command "bundle install"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  action :run
+end
+
+execute "deployment bundler" do
+  command "bundle install --deployment"
+  user node[:unicorn][:user]
+  group node[:unicorn][:group]
   cwd File.join(node[:unicorn][:apps_dir], app_name)
   action :run
 end

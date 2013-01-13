@@ -11,4 +11,9 @@ setuid <%= node[:unicorn][:user] %>
 setgid <%= node[:unicorn][:group] %>
 
 chdir <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>
-exec /usr/local/bin/rake environment resque:work QUEUE=* PIDFILE=<%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/tmp/pids/resque.pid  RAILS_ENV=<%= node['notification-service'][:environment] %> >> <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/resque.log 2>&1
+env RAILS_ENV=<%= node['notification-service'][:environment] %>
+script
+  PIDFILE=<%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/tmp/pids/resque.pid
+  echo $$ > $PIDFILE
+  exec /usr/local/bin/ruby -S bundle exec rake environment resque:work QUEUE=* RAILS_ENV=<%= node['notification-service'][:environment] %> PIDFILE=$PIDFILE >> <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/resque.log 2>&1
+end script

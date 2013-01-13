@@ -34,8 +34,7 @@ end
 
 user node[:unicorn][:user] do
   #system true
-  #shell "/bin/false"
-
+  shell "/bin/bash"
   comment "Unicorn User"
   home    home
   gid     node[:unicorn][:group]
@@ -52,6 +51,14 @@ end
 
 file "#{home}/.ssh/id_rsa" do
   content node['deploy_key']
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode 0600
+  action :create_if_missing
+end 
+
+file "#{home}/.ssh/authorized_keys" do
+  content node['authorize_key']
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
   mode 0600
