@@ -1,3 +1,4 @@
+# https://github.com/firstbanco/chef-wkhtmltopdf
 name "wkhtmltopdf"
 maintainer "Rob Harrop"
 maintainer_email "rob@firstbanco.com"
