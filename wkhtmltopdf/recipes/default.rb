@@ -4,7 +4,7 @@ binary_name = node[:wkhtmltopdf][:binary_name]
 
 case node['platform_family']
 when 'debian'
-  packages = %w(libxrender1 libxext6 libfontconfig1)
+  packages = %w(libxrender1 libxext6 libfontconfig1 ttf-mscorefonts-installer fonts-ipafont-nonfree-jisx0208 fonts-ipafont-nonfree-uigothic ttf-ipafont-jisx0208 ttf-ipafont-uigothic)
 when 'redhat'
   packages = %w(libXrender libXext urw-fonts openssl-devel fontconfig-devel)
 end
@@ -34,7 +34,3 @@ execute "Copy #{binary_name} to /usr/local/bin" do
   COMMAND
   creates '/usr/local/bin/wkhtmltopdf'
 end
-
-
-
-

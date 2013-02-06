@@ -50,7 +50,7 @@ file "#{node[:unicorn][:apps_dir]}/#{app_name}/script/daemon" do
 end
 
 execute "system bundler" do
-  command "bundle install"
+  command "bundle install --no-deployment"
   cwd File.join(node[:unicorn][:apps_dir], app_name)
   action :run
 end
