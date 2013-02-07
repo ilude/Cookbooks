@@ -32,7 +32,15 @@ git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
 end
 
 execute "bundler" do
-  command "bundle install"
+  command "bundle install --no-deployment"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  action :run
+end
+
+execute "deployment bundler" do
+  command "bundle install --deployment"
+  user node[:unicorn][:user]
+  group node[:unicorn][:group]
   cwd File.join(node[:unicorn][:apps_dir], app_name)
   action :run
 end
