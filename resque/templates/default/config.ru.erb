@@ -15,10 +15,10 @@ end
 #end
 
 use Rack::ShowExceptions
-<% if( node[:resque_web][:website_hostname].eql?("_") ) %>
-  run Rack::URLMap.new "/resque" => Resque::Server.new
-<% else %>
-  run Resque::Server.new
-<% end %>
-
+#<% if( node[:resque_web][:website_hostname].eql?("_") ) %>
+#  run Rack::URLMap.new "/resque" => Resque::Server.new
+#<% else %>
+#  run Resque::Server.new
+#<% end %>
+run Rack::URLMap.new "/resque" => Resque::Server.new
 
