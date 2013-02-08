@@ -2,10 +2,6 @@ include_recipe "nginx"
 
 gem_package "unicorn"
 
-def add_known_host(hosts, user, group = user)
-  
-end
-
 directory "/root/.ssh" do
   owner "root"
   group "root"
@@ -40,6 +36,12 @@ user node[:unicorn][:user] do
   gid     node[:unicorn][:group]
   supports :manage_home => true
   action  :create
+end
+
+group "adm" do
+  action :modify
+  members node[:unicorn][:user]
+  append true
 end
 
 directory "#{home}/.ssh" do
