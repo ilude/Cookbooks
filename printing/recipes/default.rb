@@ -1,4 +1,4 @@
-%w{cups cups-bsd printer-driver-hpcups hplip cups-pdf hplip-cups openprinting-ppds printer-driver-all foomatic-db-gutenprint libgd-tools fonts-droid gutenprint-locales liblcms2-utils lm-sensors snmp-mibs-downloader perl-doc libterm-readline-gnu-perl libterm-readline-perl-perl libpod-plainer-perl fonts-arphic-ukai fonts-arphic-uming fonts-unfonts-core gutenprint-doc hpijs-ppds hplip-doc cifs-utils openssl-blacklist}.each do |pkg|
+%w{cups cups-bsd printer-driver-hpcups hplip hplip-cups openprinting-ppds printer-driver-all foomatic-db-gutenprint libgd-tools fonts-droid gutenprint-locales libterm-readline-gnu-perl libterm-readline-perl-perl libpod-plainer-perl fonts-arphic-ukai fonts-arphic-uming fonts-unfonts-core hpijs-ppds openssl-blacklist}.each do |pkg|
   package pkg do
     action :install
   end
