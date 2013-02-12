@@ -10,7 +10,7 @@ template "notification-loader.conf" do
   group "root"
   mode "0644"
   variables(
-    :app_name => app_name
+    :app_name => node['notification-service'][:app_name] 
   )
   notifies :restart, resources(:service => "notification-loader")
 end

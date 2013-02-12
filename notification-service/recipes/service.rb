@@ -5,7 +5,7 @@ include_recipe "printing"
 
 package "freetds-dev"
 
-app_name = "notification-service"
+app_name = node['notification-service'][:app_name] 
 
 service app_name do
   provider Chef::Provider::Service::Upstart
