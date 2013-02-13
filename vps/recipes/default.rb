@@ -114,3 +114,9 @@ cron "update requirement index" do
   minute "0"
   command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; /usr/local/bin/bundle exec /usr/local/bin/ruby script/load.rb"
 end
+
+execute "queue requirement load" do
+  command "ruby script/load.rb 1>log/requirement_load.log 2>&1 &"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  action :run
+end
