@@ -116,7 +116,7 @@ cron "update requirement index" do
 end
 
 execute "queue requirement load" do
-  command 'echo "ruby script/load.rb 1>/apps/vps/log/requirement_load.log 2>&1" | at now + 1 minute'
+  command 'echo "ruby script/load.rb 1>/apps/vps/log/requirement_load.log 2>&1" | at now + 2 minute'
   cwd File.join(node[:unicorn][:apps_dir], app_name)
   action :run
 end
