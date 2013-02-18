@@ -112,7 +112,7 @@ end
 cron "update requirement index" do
   hour "3"
   minute "0"
-  command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; /usr/local/bin/bundle exec /usr/local/bin/ruby script/load.rb"
+  command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; RAILS_ENV=production /usr/local/bin/bundle exec /usr/local/bin/ruby script/load.rb"
 end
 
 execute "queue requirement load" do
