@@ -20,7 +20,7 @@ bash "remove the elasticsearch user home" do
 end
 
 remote_file "/tmp/elasticsearch-#{version}.tar.gz" do
-  source    "https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-#{version}.tar.gz"
+  source    "http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-#{version}.tar.gz"
   mode      "0644"
   not_if{ File.exists? "/tmp/elasticsearch-#{version}.tar" }
 end
