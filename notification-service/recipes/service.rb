@@ -86,3 +86,10 @@ service app_name do
   provider Chef::Provider::Service::Upstart
   action [:enable, :start]
 end
+
+execute "restart #{app_name}" do
+  command "service #{app_name} restart"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  action :run
+  only_if "ps cax | grep `cat tmp/pids/resque.pids"
+end

@@ -19,3 +19,10 @@ service "notification-loader" do
   provider Chef::Provider::Service::Upstart
   action [:enable, :start]
 end
+
+execute "restart notification-loader" do
+  command "service notification-loader restart"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  action :run
+  only_if "ps cax | grep `cat tmp/pids/notification-loader.pids"
+end

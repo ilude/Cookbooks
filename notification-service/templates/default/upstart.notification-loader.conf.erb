@@ -15,4 +15,9 @@ expect daemon
 chdir <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>
 env RAILS_ENV=<%= node['notification-service'][:environment] %> 
 
-exec script/daemon start notification_loader >> <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/loader.log 2>&1
+script
+  PIDFILE=<%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/tmp/pids/notification-loader.pid
+  echo $$ > $PIDFILE
+  exec script/daemon start notification_loader >> <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/notification-loader.log 2>&1
+end script
+
