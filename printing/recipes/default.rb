@@ -1,5 +1,7 @@
-%w{cups cups-bsd printer-driver-hpcups hplip hplip-cups openprinting-ppds printer-driver-all foomatic-db-gutenprint libgd-tools fonts-droid gutenprint-locales libterm-readline-gnu-perl libterm-readline-perl-perl libpod-plainer-perl fonts-arphic-ukai fonts-arphic-uming fonts-unfonts-core hpijs-ppds openssl-blacklist}.each do |pkg|
+#gutenprint-locales libterm-readline-gnu-perl libterm-readline-perl-perl libpod-plainer-perl openprinting-ppds printer-driver-all foomatic-db-gutenprint libgd-tools 
+%w{cups cups-bsd printer-driver-hpcups hplip hplip-cups hpijs-ppds}.each do |pkg|
   package pkg do
+    options "--no-install-recommends "
     action :install
   end
 end

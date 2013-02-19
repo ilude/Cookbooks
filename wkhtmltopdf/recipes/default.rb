@@ -4,7 +4,17 @@ binary_name = node[:wkhtmltopdf][:binary_name]
 
 case node['platform_family']
 when 'debian'
-  packages = %w(libxrender1 libxext6 libfontconfig1 ttf-mscorefonts-installer fonts-ipafont-nonfree-jisx0208 fonts-ipafont-nonfree-uigothic ttf-ipafont-jisx0208 ttf-ipafont-uigothic)
+  packages = %w(libxrender1 libxext6 libfontconfig1 
+    ttf-mscorefonts-installer 
+    fonts-droid 
+    fonts-ipafont-nonfree-jisx0208 
+    fonts-ipafont-nonfree-uigothic 
+    ttf-ipafont-jisx0208 
+    ttf-ipafont-uigothic
+    fonts-arphic-ukai 
+    fonts-arphic-uming 
+    fonts-unfonts-core 
+    )
 when 'redhat'
   packages = %w(libXrender libXext urw-fonts openssl-devel fontconfig-devel)
 end

@@ -23,6 +23,7 @@ directory "/mnt/loftware" do
   action :create
 end
 
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //zeus/Vdrive/Visual/VMFG/WDDrop /mnt/loftware
 mount "/mnt/loftware" do
   device "//#{node[:smb][:print_server]}/Vdrive/Visual/VMFG/WDDrop"
   fstype "cifs"
