@@ -43,14 +43,14 @@ template "nginx.conf" do
   notifies :restart, resources(:service => "nginx")
 end
 
-template "default-site" do
-  path "#{node[:nginx][:dir]}/sites-available/default-site"
-  source "default-site.erb"
-  owner "root"
-  group "root"
-  mode 0644
-  notifies :restart, resources(:service => "nginx")
-end
+# template "default-site" do
+#   path "#{node[:nginx][:dir]}/sites-available/default-site"
+#   source "default-site.erb"
+#   owner "root"
+#   group "root"
+#   mode 0644
+#   notifies :restart, resources(:service => "nginx")
+# end
 
 directory "#{node[:nginx][:dir]}/apps" do
   owner "root"
