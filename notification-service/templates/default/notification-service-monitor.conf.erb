@@ -1,0 +1,13 @@
+# upstart-respawn-monitor.conf
+
+description "Notify root about ushare respawn limit reached"
+author "Roman Yepishev <rtg@rtg.in.ua>"
+
+# This is a short-lived job
+task
+
+start on stopped notification-service PROCESS=respawn
+
+script
+    echo "notification-service reached respawn limit" | mail -s "notification-service crashed" notifications@rammount.com
+end script

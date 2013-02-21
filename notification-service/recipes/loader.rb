@@ -3,6 +3,14 @@ service "notification-loader" do
   supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
 end
 
+template "notification-loader-monitor.conf" do
+  path "/etc/init/notification-loader-monitor.conf"
+  source "notification-loader-monitor.conf.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
 template "notification-loader.conf" do
   path "/etc/init/notification-loader.conf"
   source "upstart.notification-loader.conf.erb"

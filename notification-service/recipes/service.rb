@@ -70,6 +70,14 @@ end
 #   action :run
 # end
 
+template "notification-service-monitor.conf" do
+  path "/etc/init/notification-service-monitor.conf"
+  source "notification-service-monitor.conf.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
 template "#{app_name}.conf" do
   path "/etc/init/#{app_name}.conf"
   source "upstart.#{app_name}.conf.erb"

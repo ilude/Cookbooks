@@ -4,7 +4,7 @@ start on (local-filesystems and net-device-up IFACE=eth0)
 stop on shutdown
 
 respawn
-respawn limit 10 5
+respawn limit 3 15
 console none
 
 setuid <%= node[:unicorn][:user] %>
