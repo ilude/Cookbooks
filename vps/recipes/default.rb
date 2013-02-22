@@ -1,4 +1,5 @@
 include_recipe "unicorn"
+include_recipe "elasticsearch"
 
 package "nodejs" # needed for javascript runtime
 package "freetds-dev"
