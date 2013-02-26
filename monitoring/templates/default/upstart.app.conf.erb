@@ -1,0 +1,15 @@
+description "<%= @app_name %> application"
+
+start on starting redis
+stop on stopped redis
+
+respawn
+respawn limit 3 15
+console none
+
+setuid <%= node[:monitoring][:user] %>
+setgid <%= node[:monitoring][:group] %>
+chdir <%= node[:monitoring][:app_dir] %>
+
+expect daemon
+exec bluepill load <%= node[:monitoring][:app_dir] %>/<%= node[:monitoring][:environment] %>.pill

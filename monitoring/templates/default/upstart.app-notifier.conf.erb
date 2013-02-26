@@ -1,0 +1,13 @@
+
+# upstart.monitoring.notifier.conf.erb
+
+description "fire notification about <%= @app_name %> respawn limit reached"
+
+# This is a short-lived job
+task
+
+start on stopped <%= @app_name %> PROCESS=respawn
+
+script
+    echo "<%= @app_name %> reached respawn limit" | mail -s "<%= @app_name %> crashed" notifications@rammount.com
+end script

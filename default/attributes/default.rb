@@ -1,0 +1,1 @@
+default[:apps_dir] = "/apps"

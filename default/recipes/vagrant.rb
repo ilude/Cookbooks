@@ -1,3 +1,5 @@
+include_recipe "default"
+
 template "install chef-update script" do
   path "/usr/local/bin/chef-update"
   source "chef-update.erb"

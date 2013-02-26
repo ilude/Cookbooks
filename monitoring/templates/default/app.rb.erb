@@ -1,6 +1,7 @@
 require "fnordmetric"
 
-FnordMetric.namespace :myapp do
+FnordMetric.namespace :notification do
+  hide_active_users
 
   timeseries_gauge :number_of_notifications,
     :group => "Notifications",
@@ -13,13 +14,15 @@ FnordMetric.namespace :myapp do
   gauge :events_per_second, :tick => 1.second
   gauge :events_per_minute, :tick => 1.minute
 
-  event :notification do
+  event "*" do
     incr :events_per_hour
     incr :events_per_minute
     incr :events_per_second
+  end
 
-    incr :number_of_notifications, data[:type].to_sym, 1
-
+  event :notification do
+    observe :number_of_notifications, data[:type]
+    #incr :number_of_notifications, data[:type].to_sym, 1
   end
 
   widget 'TechStats', {
@@ -50,7 +53,6 @@ FnordMetric.namespace :myapp do
     :autoupdate => 1
   }
 
-
   widget 'TechStats', {
     :title => "Events per Hour",
     :type => :timeline,
@@ -59,7 +61,6 @@ FnordMetric.namespace :myapp do
     :include_current => true,
     :autoupdate => 30
   }
-
 
 end
 

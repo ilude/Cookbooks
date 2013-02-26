@@ -1,5 +1,8 @@
 include_recipe "ssmtp"
 
+include_recipe "default::bash"
+include_recipe "default::git"
+
 package "curl"
 package "tmux"
 package "openssl-blacklist"
