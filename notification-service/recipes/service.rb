@@ -1,5 +1,5 @@
+include_recipe "unicorn::user"
 include_recipe "resque"
-include_recipe "unicorn"
 include_recipe "wkhtmltopdf"
 include_recipe "printing"
 
@@ -9,7 +9,7 @@ app_name = node['notification-service'][:app_name]
 
 service app_name do
   provider Chef::Provider::Service::Upstart
-  supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
+  supports :status => true, :restart => false, :start => true, :stop => true, :reload => true
 end
 
 host = "bitbucket.org"
@@ -68,6 +68,17 @@ end
 #   command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:precompile"
 #   cwd File.join(node[:unicorn][:apps_dir], app_name)
 #   action :run
+# end
+
+# template "sudoers notification-service_conf" do
+#   path "/etc/sudoers.d/notification-service_conf"
+#   source "sudoers.d.erb"
+#   owner "root"
+#   group "root"
+#   mode "0440"
+#   variables(
+#     :app_name => app_name
+#   )
 # end
 
 template "notification-service-monitor.conf" do

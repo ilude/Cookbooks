@@ -3,11 +3,14 @@ Bluepill.application("<%= @app_name %>", :log_file => "<%= node[:monitoring][:ap
     process.start_command = "/usr/local/bin/ruby <%= node[:monitoring][:app_dir] %>/<%= @app_name %>.rb > <%= node[:monitoring][:app_dir] %>/log/<%= @app_name %>.log 2>&1"
     process.pid_file = "<%= node[:monitoring][:app_dir] %>/tmp/pids/<%= @app_name %>.pid"
     process.daemonize = true
+
+    process.uid = process.gid = "<%= node[:monitoring][:user] %>"
+
     process.start_grace_time = 3.seconds
     process.stop_grace_time = 5.seconds
     process.restart_grace_time = 10.seconds
 
-    process.stop_signals = [:term, 5.seconds, :kill]
+    process.stop_signals = [:term, 3.seconds, :kill]
 
     process.checks :cpu_usage, :every => 5.seconds, :below => 20, :times => 3
     process.checks :mem_usage, :every => 5.seconds, :below => 512.megabytes, :times => 3

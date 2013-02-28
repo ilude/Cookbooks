@@ -5,28 +5,12 @@ gem_package "fnordmetric"
 
 app_name = node[:monitoring][:app_name]
 
-unless(node.attribute? :apps_dir) 
-  include_attribute "default"
-end
-
 node.set[:monitoring][:app_dir] = File.join(node[:apps_dir], app_name)
 
-# Create User, Group and application directories
+# Create User, Group 
+include_recipe "monitoring::user"
 
-group node[:monitoring][:group] do
-  action :create
-end
-
-user node[:monitoring][:user] do
-  #system true
-  shell "/bin/bash"
-  comment "#{node[:monitoring][:user]} user"
-  home    "/home/#{node[:monitoring][:user]}"
-  gid     node[:monitoring][:group]
-  supports :manage_home => true
-  action  :create
-end
-
+# Create application directories
 %w{tmp/sockets tmp/pids log}.each do |dir|
    directory File.join(node[:monitoring][:app_dir], dir) do
       mode "0775"
@@ -35,6 +19,11 @@ end
       action :create
       recursive true
    end
+end
+
+service app_name do
+  provider Chef::Provider::Service::Upstart
+  supports :status => true, :restart => false, :start => true, :stop => true
 end
 
 template "Fnordmetric configuration" do
@@ -46,6 +35,7 @@ template "Fnordmetric configuration" do
   variables(
     :app_name => app_name
   )
+  notifies :restart, resources(:service => app_name)
 end
 
 template "BluePill #{node[:monitoring][:environment]} configuration" do
@@ -57,6 +47,7 @@ template "BluePill #{node[:monitoring][:environment]} configuration" do
   variables(
     :app_name => app_name
   )
+  notifies :restart, resources(:service => app_name)
 end
 
 template "#{app_name}-notifier.conf" do
@@ -68,11 +59,6 @@ template "#{app_name}-notifier.conf" do
   variables(
     :app_name => app_name
   )
-end
-
-service app_name do
-  provider Chef::Provider::Service::Upstart
-  supports :status => true, :restart => true, :start => true, :stop => true
 end
 
 template "#{app_name}.conf" do

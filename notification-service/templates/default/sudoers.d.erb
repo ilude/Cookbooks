@@ -1,0 +1,1 @@
+%<%= node[:unicorn][:user] %> ALL=(ALL) NOPASSWD: /bin/chmod +x script/daemon, /bin/chmod +x script/notification-loader-debug.sh, <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/rake services:restart
