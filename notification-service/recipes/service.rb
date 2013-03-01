@@ -6,6 +6,7 @@ include_recipe "printing"
 package "freetds-dev"
 
 app_name = node['notification-service'][:app_name] 
+node.set['notification-service'][:app_dir] = File.join(node[:apps_dir], app_name)
 
 service app_name do
   provider Chef::Provider::Service::Upstart
@@ -21,7 +22,7 @@ execute "add_known_host" do
   not_if { File.exists?(known_hosts) && File.read(known_hosts).include?(host) }
 end
 
-git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
+git node.set['notification-service'][:app_dir] do
   repository repo
   reference "master"
   action :sync
@@ -30,7 +31,7 @@ git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
 end
 
 %w{tmp/sockets tmp/pids log public/data}.each do |dir|
-   directory "#{node[:unicorn][:apps_dir]}/#{app_name}/#{dir}" do
+   directory "#{node['notification-service'][:app_dir]}/#{dir}" do
       mode "0775"
       owner node[:unicorn][:user]
       group node[:unicorn][:group]
@@ -39,7 +40,7 @@ end
    end
 end
 
-file "#{node[:unicorn][:apps_dir]}/#{app_name}/script/daemon" do
+file "#{node['notification-service'][:app_dir]}/script/daemon" do
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
   mode "0775"
@@ -47,7 +48,7 @@ end
 
 execute "system bundler" do
   command "bundle install --no-deployment"
-  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  cwd node['notification-service'][:app_dir]
   action :run
 end
 
@@ -55,18 +56,18 @@ execute "deployment bundler" do
   command "bundle install --deployment"
   user node[:unicorn][:user]
   group node[:unicorn][:group]
-  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  cwd node['notification-service'][:app_dir]
   action :run
 end
 
 execute "unicorn_owns_apps" do
-  command "chown -R #{node[:unicorn][:user]}:#{node[:unicorn][:group]} #{node[:unicorn][:apps_dir]}/#{app_name}"
+  command "chown -R #{node[:unicorn][:user]}:#{node[:unicorn][:group]} #{node['notification-service'][:app_dir]}"
   action :run
 end
 
 # execute "assets precompile" do
 #   command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:precompile"
-#   cwd File.join(node[:unicorn][:apps_dir], app_name)
+#   cwd node['notification-service'][:app_dir]
 #   action :run
 # end
 
@@ -108,7 +109,7 @@ end
 
 execute "restart #{app_name}" do
   command "service #{app_name} restart"
-  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  cwd node['notification-service'][:app_dir]
   action :run
-  only_if "ps cax | grep `cat tmp/pids/resque.pids"
+  only_if "ps cax | grep `cat tmp/pids/resque.pid"
 end
