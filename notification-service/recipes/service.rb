@@ -111,5 +111,5 @@ execute "restart #{app_name}" do
   command "service #{app_name} restart"
   cwd node['notification-service'][:app_dir]
   action :run
-  only_if "ps cax | grep `cat tmp/pids/resque.pid"
+  only_if "ps cax | grep `cat tmp/pids/resque.pid`"
 end
