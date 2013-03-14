@@ -9,7 +9,7 @@ app_name = "product_search"
 
 service app_name do
   provider Chef::Provider::Service::Upstart
-  supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
+  supports :status => true, :restart => false, :start => true, :stop => true, :reload => false
 end
 
 host = "bitbucket.org"
@@ -67,6 +67,17 @@ end
    end
 end
 
+template "unicorn.rb" do
+  path "#{node[:unicorn][:apps_dir]}/#{app_name}"
+  source "unicorn.rb.erb"
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0644"
+  variables(
+    :app_name => app_name
+  )
+end
+
 template "server.#{app_name}.conf" do
   path "#{node[:nginx][:dir]}/sites-available/#{app_name}"
   source "nginx.server.app.conf.erb"
@@ -76,7 +87,7 @@ template "server.#{app_name}.conf" do
   variables(
     :app_name => app_name
   )
-  #notifies :reload, resources(:service => "nginx")
+  notifies :restart, resources(:service => app_name)
 end
 
 link "#{node[:nginx][:dir]}/sites-enabled/#{app_name}"  do
