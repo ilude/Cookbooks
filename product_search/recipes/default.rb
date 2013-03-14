@@ -68,7 +68,7 @@ end
 end
 
 template "unicorn.rb" do
-  path "#{node[:unicorn][:apps_dir]}/#{app_name}"
+  path "#{node[:unicorn][:apps_dir]}/#{app_name}/unicorn.rb"
   source "unicorn.rb.erb"
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
