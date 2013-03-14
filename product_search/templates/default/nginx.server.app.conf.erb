@@ -1,0 +1,49 @@
+
+upstream unicorn_<%= @app_name %>_service {
+  server unix:<%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/tmp/sockets/unicorn.sock
+  fail_timeout=0;
+}
+
+server {
+  listen   80;
+  server_name  <%= node[@app_name][:server_name] %>;
+  server_name_in_redirect off;
+  access_log  <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/access.nginx.log;
+  root <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/public;
+
+  location ~ ^/(assets)/  {
+    gzip_static on;
+    expires     max;
+    add_header  Cache-Control public;
+  }
+
+  location ~ ^/(images)/  {
+    expires max;
+    add_header  Cache-Control public;
+  }
+
+  location = /favicon.ico  {
+    expires max;
+    add_header  Cache-Control public;
+  }
+
+  location / {
+    try_files $uri $uri/index.html $uri/index.htm @app;
+    error_page 404              /404.html;
+    error_page 422              /422.html;
+    error_page 500 502 503 504  /500.html;
+    error_page 403              /403.html;
+  }
+
+  location @app {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_read_timeout 120;
+
+    # pass to the upstream unicorn server mentioned above
+    proxy_pass http://unicorn_<%= @app_name %>_service;
+  }
+}
+
+  
