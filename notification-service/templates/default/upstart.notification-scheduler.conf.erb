@@ -1,0 +1,25 @@
+description "Notification Resque Scheduler"
+
+start on starting redis
+stop on stopped redis
+
+respawn
+respawn limit 3 15
+console none
+
+setuid <%= node[:unicorn][:user] %>
+setgid <%= node[:unicorn][:group] %>
+
+chdir <%= node[:unicorn][:apps_dir] %>/<%= node['notification-service'][:app_name] %>
+env RAILS_ENV=<%= node['notification-service'][:environment] %> 
+script
+  exec bundle exec rake resque:scheduler >> log/resque-scheduler.log 2>&1
+end script
+
+post-start script
+  status notification-scheduler | head -n1 | awk '{print $NF}' > tmp/pids/resque-scheduler.pid
+end script
+
+post-stop script
+  rm -f tmp/pids/resque-scheduler.pid
+end script

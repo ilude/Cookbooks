@@ -40,12 +40,6 @@ end
    end
 end
 
-file "#{node['notification-service'][:app_dir]}/script/daemon" do
-  owner node[:unicorn][:user]
-  group node[:unicorn][:group]
-  mode "0775"
-end
-
 execute "system bundler" do
   command "bundle install --no-deployment"
   cwd node['notification-service'][:app_dir]
@@ -65,22 +59,7 @@ execute "unicorn_owns_apps" do
   action :run
 end
 
-# execute "assets precompile" do
-#   command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:precompile"
-#   cwd node['notification-service'][:app_dir]
-#   action :run
-# end
-
-# template "sudoers notification-service_conf" do
-#   path "/etc/sudoers.d/notification-service_conf"
-#   source "sudoers.d.erb"
-#   owner "root"
-#   group "root"
-#   mode "0440"
-#   variables(
-#     :app_name => app_name
-#   )
-# end
+include_recipe "notification-service::scheduler"
 
 template "notification-service-monitor.conf" do
   path "/etc/init/notification-service-monitor.conf"

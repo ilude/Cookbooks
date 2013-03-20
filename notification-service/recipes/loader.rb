@@ -3,6 +3,12 @@ service "notification-loader" do
   supports :status => true, :restart => true, :start => true, :stop => true, :reload => true
 end
 
+file "#{node['notification-service'][:app_dir]}/script/daemon" do
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0775"
+end
+
 template "notification-loader-monitor.conf" do
   path "/etc/init/notification-loader-monitor.conf"
   source "notification-loader-monitor.conf.erb"
