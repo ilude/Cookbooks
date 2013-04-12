@@ -7,7 +7,7 @@
 end
 
 execute "Setup LaserJet" do
-  command "lpadmin -p npi_office -v socket://192.168.50.85 -m drv:///hpcups.drv/hp-laserjet_p4015dn.ppd -L 'NPI Front Office LaserJet P4015' -E"
+  command "lpadmin -p npi_office -v socket://192.168.50.198 -m drv:///hpcups.drv/hp-laserjet_p4015dn.ppd -L 'NPI Front Office LaserJet P4015' -E"
   action :run
 end
 
