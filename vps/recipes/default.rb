@@ -110,6 +110,20 @@ service app_name do
   action [:enable, :start]
 end
 
+missing_image_command = "cd #{node[:unicorn][:apps_dir]}/#{app_name}; RAILS_ENV=production /usr/local/bin/bundle exec /usr/local/bin/ruby script/missing_images.rb"
+
+cron "setup missing image report cron job" do
+  hour "6"
+  minute "0"
+  command missing_image_command
+end
+
+execute "queue missing image report" do
+  command "echo \"#{missing_image_command}\" | at now + 10 minute"
+  cwd File.join(node[:unicorn][:apps_dir], app_name)
+  action :run
+end
+
 cron "update requirement index" do
   hour "3"
   minute "0"
