@@ -25,7 +25,7 @@ end
 
 #mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //thor/loftware$ /mnt/labels
 mount "/mnt/labels" do
-  device "//#{node[:smb][:label_server]}/loftware$"
+  device "//#{node[:smb][:label_server]}/loftware$/LABELS"
   fstype "cifs"
   options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
   dump 0
