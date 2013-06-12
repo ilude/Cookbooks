@@ -16,11 +16,21 @@ template ".smbcredentials" do
   mode "0600"
 end
 
-directory "/mnt/loftware" do
+directory "/mnt/labels" do
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
   mode "0755"
   action :create
+end
+
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //thor/loftware$ /mnt/labels
+mount "/mnt/labels" do
+  device "//#{node[:smb][:label_server]}/loftware$"
+  fstype "cifs"
+  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
+  dump 0
+  pass 0
+  action [:mount, :enable]
 end
 
 #mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //zeus/Vdrive/Visual/VMFG/WDDrop /mnt/loftware
@@ -31,6 +41,13 @@ mount "/mnt/loftware" do
   dump 0
   pass 0
   action [:mount, :enable]
+end
+
+directory "/mnt/loftware" do
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0755"
+  action :create
 end
 
 ["#{node[:unicorn][:apps_dir]}/vps/public/images/parts", "#{node[:unicorn][:apps_dir]}/vps/public/images/locations"].each do |path|
