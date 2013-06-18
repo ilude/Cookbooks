@@ -16,6 +16,23 @@ template ".smbcredentials" do
   mode "0600"
 end
 
+directory "/mnt/line_drawings" do
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0755"
+  action :create
+end
+
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //thor/loftware$ /mnt/labels
+mount "/mnt/line_drawings" do
+  device "//#{node[:smb][:image_server] }/YDrive/1art/line_drawings"
+  fstype "cifs"
+  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
+  dump 0
+  pass 0
+  action [:mount, :enable]
+end
+
 directory "/mnt/labels" do
   owner node[:unicorn][:user]
   group node[:unicorn][:group]
