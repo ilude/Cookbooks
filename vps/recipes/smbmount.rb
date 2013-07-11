@@ -40,7 +40,7 @@ directory "/mnt/labels" do
   action :create
 end
 
-#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //thor/loftware$ /mnt/labels
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //thor/loftware$/LABELS /mnt/labels
 mount "/mnt/labels" do
   device "//#{node[:smb][:label_server]}/loftware$/LABELS"
   fstype "cifs"
