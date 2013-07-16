@@ -23,7 +23,7 @@ directory "/mnt/line_drawings" do
   action :create
 end
 
-#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //thor/loftware$ /mnt/labels
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //npi-bignas/YDrive/1art/line_drawings /mnt/line_drawings
 mount "/mnt/line_drawings" do
   device "//#{node[:smb][:image_server] }/YDrive/1art/line_drawings"
   fstype "cifs"
