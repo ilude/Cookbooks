@@ -17,8 +17,8 @@ env DAEMON="${ES_HOME}/bin/elasticsearch"
 env DATA_DIR="${ES_HOME}/data"
 env CONFIG_DIR="${ES_HOME}/config"
 env LOG_DIR="<%= node[:elasticsearch][:log_dir] %>"
-
+env PID_FILE="<%= node[:elasticsearch][:pid_file] %>"
  
 console output
  
-exec su -c "$DAEMON -f -Des.path.conf=$CONFIG_DIR -Des.path.home=$ES_HOME -Des.path.logs=$LOG_DIR -Des.path.data=$DATA_DIR  "
+exec su <%= node[:elasticsearch][:user] %> -c "$DAEMON -f -Des.path.conf=$CONFIG_DIR -Des.path.home=$ES_HOME -Des.path.logs=$LOG_DIR -Des.path.data=$DATA_DIR -p $PIDFILE"

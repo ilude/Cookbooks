@@ -54,13 +54,14 @@ end
 
 # Create ES directories
 #
-%w| node[:elasticsearch][:config_dir] node[:elasticsearch][:data_dir] node[:elasticsearch][:log_dir] |.each do |path|
+%W[ #{node[:elasticsearch][:config_dir]} #{node[:elasticsearch][:data_dir]} #{node[:elasticsearch][:log_dir]} #{node[:elasticsearch][:pid_path]} ].each do |path|
   directory path do
     owner node[:elasticsearch][:user] 
     group node[:elasticsearch][:user]
     mode 0755
     recursive true
     action :create
+    not_if{ Dir.exists? path }
   end
 end
 

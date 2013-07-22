@@ -4,6 +4,10 @@ default[:elasticsearch][:data_dir]    = "#{default[:elasticsearch][:dir]}/elasti
 default[:elasticsearch][:config_dir]  = "#{default[:elasticsearch][:dir]}/elasticsearch/config"
 default[:elasticsearch][:log_dir]     = "/var/log/elasticsearch"
 
+
+default[:elasticsearch][:pid_path]  = "/var/run/elasticsearch"
+default[:elasticsearch][:pid_file]  = "#{node[:elasticsearch][:pid_path]}/elasticsearch.pid"
+
 default[:elasticsearch][:user]            = "elasticsearch"
 default[:elasticsearch][:http][:enabled]  = true
 default[:elasticsearch][:http][:port]     = 9200

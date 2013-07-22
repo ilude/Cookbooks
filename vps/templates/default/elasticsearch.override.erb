@@ -1,0 +1,6 @@
+# upstart-elasticsearch override
+# this file adds post start indexing 
+
+post-start script
+  cd <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>; RAILS_ENV=production /usr/local/bin/bundle exec /usr/local/bin/ruby script/load.rb &
+end script

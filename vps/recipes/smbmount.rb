@@ -50,6 +50,13 @@ mount "/mnt/labels" do
   action [:mount, :enable]
 end
 
+directory "/mnt/loftware" do
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0755"
+  action :create
+end
+
 #mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //zeus/Vdrive/Visual/VMFG/WDDrop /mnt/loftware
 mount "/mnt/loftware" do
   device "//#{node[:smb][:print_server]}/Vdrive/Visual/VMFG/WDDrop"
@@ -60,12 +67,7 @@ mount "/mnt/loftware" do
   action [:mount, :enable]
 end
 
-directory "/mnt/loftware" do
-  owner node[:unicorn][:user]
-  group node[:unicorn][:group]
-  mode "0755"
-  action :create
-end
+
 
 ["#{node[:unicorn][:apps_dir]}/vps/public/images/parts", "#{node[:unicorn][:apps_dir]}/vps/public/images/locations"].each do |path|
   directory path do

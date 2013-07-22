@@ -32,14 +32,14 @@ git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
   group node[:unicorn][:group]
 end
 
-execute "bundler" do
-  command "bundle install --no-deployment"
-  cwd File.join(node[:unicorn][:apps_dir], app_name)
-  action :run
-end
+# execute "bundler" do
+#   command "bundle install --no-deployment --without development test"
+#   cwd File.join(node[:unicorn][:apps_dir], app_name)
+#   action :run
+# end
 
 execute "deployment bundler" do
-  command "bundle install --deployment"
+  command "bundle install --deployment --without development test"
   user node[:unicorn][:user]
   group node[:unicorn][:group]
   cwd File.join(node[:unicorn][:apps_dir], app_name)
@@ -103,6 +103,18 @@ template "#{app_name}.conf" do
   notifies :restart, resources(:service => app_name)
 end
 
+template "elasticsearch.override" do
+  path "/etc/init/elasticsearch.override"
+  source "elasticsearch.override.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  variables(
+    :app_name => app_name
+  )
+  notifies :restart, resources(:service => 'elasticsearch')
+end
+
 include_recipe "vps::smbmount"
 
 service app_name do
@@ -130,8 +142,9 @@ cron "update requirement index" do
   command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; RAILS_ENV=production /usr/local/bin/bundle exec /usr/local/bin/ruby script/load.rb"
 end
 
-execute "queue requirement load" do
-  command 'echo "ruby script/load.rb 1>/apps/vps/log/requirement_load.log 2>&1" | at now + 2 minute'
-  cwd File.join(node[:unicorn][:apps_dir], app_name)
-  action :run
-end
+# upstart elasticsearch.override takes care of this now
+#execute "queue requirement load" do
+#  command 'echo "ruby script/load.rb 1>/apps/vps/log/requirement_load.log 2>&1" | at now + 2 minute'
+#  cwd File.join(node[:unicorn][:apps_dir], app_name)
+#  action :run
+#end

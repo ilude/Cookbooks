@@ -41,13 +41,13 @@ end
 end
 
 execute "system bundler" do
-  command "bundle install --no-deployment"
+  command "bundle install --no-deployment --without development test"
   cwd node['notification-service'][:app_dir]
   action :run
 end
 
 execute "deployment bundler" do
-  command "bundle install --deployment"
+  command "bundle install --deployment --without development test"
   user node[:unicorn][:user]
   group node[:unicorn][:group]
   cwd node['notification-service'][:app_dir]
