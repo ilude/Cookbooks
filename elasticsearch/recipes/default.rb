@@ -2,11 +2,6 @@ package "openjdk-7-jre"
 
 version = "0.20.1"
 
-service "elasticsearch" do
-  provider Chef::Provider::Service::Upstart
-  supports :status => true, :restart => true, :start => true, :stop => true
-end
-
 user node[:elasticsearch][:user] do
   system true
   shell "/bin/false"
@@ -49,7 +44,6 @@ template "elasticsearch.conf" do
   owner "root"
   group "root"
   mode "0644"
-  notifies :restart, resources(:service => 'elasticsearch')
 end
 
 # Create ES directories
@@ -71,12 +65,16 @@ template "elasticsearch.yml" do
   owner node[:elasticsearch][:user] 
   group node[:elasticsearch][:user] 
   mode 0755
-  notifies :restart, resources(:service => 'elasticsearch')
 end
 
+include_recipe "bluepill"
+template "/etc/bluepill/elasticsearch.pill" do
+  source "elasticsearch.pill.erb"
+end
 
-# Make sure the service is started
-service("elasticsearch") { action :start }
+bluepill_service "elasticsearch" do
+    action [:load, :start]
+end
 
 # Write config files
 #template "#{node['elasticsearch']['config_dir']}/elasticsearch.yml" do

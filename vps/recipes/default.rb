@@ -17,10 +17,14 @@ host = "bitbucket.org"
 repo = "git@#{host}:rammounts/vps.git"
 known_hosts = "/home/#{node[:unicorn][:user]}/.ssh/known_hosts"
 
-execute "add_known_host" do
-  command "ssh-keyscan -t rsa #{host} >> #{known_hosts}"
-  user node[:unicorn][:user]
-  group node[:unicorn][:group]
+bash "add_known_host" do
+  user  node[:unicorn][:user]
+  cwd   "/home/#{node[:unicorn][:user]}"
+  code  <<-EOH
+  ssh-keyscan -t rsa #{host} >> #{known_hosts}
+  chown #{node[:unicorn][:user]}:#{node[:unicorn][:group]} #{known_hosts}
+  chmod 600 #{known_hosts}
+  EOH
   not_if { File.exists?(known_hosts) && File.read(known_hosts).include?(host) }
 end
 
@@ -53,7 +57,9 @@ end
 # end
 
 execute "assets precompile" do
-  command "sudo -u #{node[:unicorn][:user]} bundle exec rake assets:precompile"
+  command "bundle exec rake assets:precompile"
+  user node[:unicorn][:user]
+  group node[:unicorn][:group]
   cwd File.join(node[:unicorn][:apps_dir], app_name)
   action :run
 end
@@ -112,7 +118,6 @@ template "elasticsearch.override" do
   variables(
     :app_name => app_name
   )
-  notifies :restart, resources(:service => 'elasticsearch')
 end
 
 include_recipe "vps::smbmount"
@@ -130,11 +135,11 @@ cron "setup missing image report cron job" do
   command missing_image_command
 end
 
-execute "queue missing image report" do
-  command "echo \"#{missing_image_command}\" | at now + 10 minute"
-  cwd File.join(node[:unicorn][:apps_dir], app_name)
-  action :run
-end
+# execute "queue missing image report" do
+#   command "echo \"#{missing_image_command}\" | at now + 10 minute"
+#   cwd File.join(node[:unicorn][:apps_dir], app_name)
+#   action :run
+# end
 
 cron "update requirement index" do
   hour "3"

@@ -1,0 +1,7 @@
+Bluepill.application("elasticsearch") do |app|
+        app.process("elasticsearch") do |process|
+                process.start_command = "service elasticsearch start"
+                process.pid_file = "<%= node[:elasticsearch][:pid_file] %>"
+                process.stop_command = "service elasticsearch stop"
+        end
+end
