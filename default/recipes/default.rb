@@ -2,6 +2,7 @@ include_recipe "ssmtp"
 
 include_recipe "default::bash"
 include_recipe "default::git"
+include_recipe "default::disable-ip6"
 
 package "curl"
 package "tmux"
