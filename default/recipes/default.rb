@@ -2,7 +2,7 @@ include_recipe "ssmtp"
 
 include_recipe "default::bash"
 include_recipe "default::git"
-include_recipe "default::disable-ip6"
+#include_recipe "default::disable-ip6"
 
 package "curl"
 package "tmux"
@@ -26,6 +26,10 @@ end
 execute "sudo setup" do
   command "/bin/sed -i -e 's/%admin ALL=NOPASSWD:ALL/%adm ALL=NOPASSWD:ALL/g' /etc/sudoers"
   only_if { File.read("/etc/sudoers").include?("%admin ALL=NOPASSWD:ALL")}
+end
+
+execute "apt-get update" do
+  command "apt-get update"
 end
 
 #execute "add_aliases" do

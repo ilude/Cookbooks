@@ -8,5 +8,5 @@ template "/etc/sysctl.conf" do
 end
 
 execute "restart sysctl" do
-  command "sysctl -p"
+  command "sysctl -p && service networking restart"
 end
