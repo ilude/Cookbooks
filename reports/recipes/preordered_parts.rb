@@ -37,5 +37,5 @@ end
 cron "preordered parts report" do
   hour "7"
   minute "01"
-  command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; /usr/local/bin/bundle exec preordered_parts.rb"
+  command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; /usr/local/bin/bundle exec ruby preordered_parts.rb"
 end
