@@ -1,4 +1,5 @@
 include_recipe "unicorn"
+package "freetds-dev"
 
 app_name = "preordered_manufactured_parts_report"
 

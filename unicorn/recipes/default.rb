@@ -1,5 +1,6 @@
 include_recipe "nginx"
 
+gem_package "bundler"
 gem_package "unicorn"
 
 # create logrotate configuration for all rails apps
