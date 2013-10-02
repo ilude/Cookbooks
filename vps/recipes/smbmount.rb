@@ -67,7 +67,22 @@ mount "/mnt/loftware" do
   action [:mount, :enable]
 end
 
+directory "/mnt/dropbox" do
+  owner node[:unicorn][:user]
+  group node[:unicorn][:group]
+  mode "0755"
+  action :create
+end
 
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //npi-bignas/YDrive/VPS/Dropbox /mnt/dropbox
+mount "/mnt/dropbox" do
+  device "//#{node[:smb][:image_server]}/YDrive/VPS/Dropbox"
+  fstype "cifs"
+  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
+  dump 0
+  pass 0
+  action [:mount, :enable]
+end
 
 ["#{node[:unicorn][:apps_dir]}/vps/public/images/parts", "#{node[:unicorn][:apps_dir]}/vps/public/images/locations"].each do |path|
   directory path do
