@@ -11,4 +11,4 @@ setuid <%= node[:unicorn][:user] %>
 setgid <%= node[:unicorn][:group] %>
 chdir <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>
 
-exec /usr/local/bin/unicorn_rails -c <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/unicorn.rb -E production 
+exec bundle exec /usr/local/bin/unicorn_rails -c <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/unicorn.rb -E production 
