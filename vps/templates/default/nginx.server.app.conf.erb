@@ -11,6 +11,13 @@ server {
   access_log  <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/log/access.nginx.log;
   root <%= node[:unicorn][:apps_dir] %>/<%= @app_name %>/public;
 
+  # nightly reports
+  location ^~ /nightly/ {
+    index index.htm index.html;
+    alias /apps/reports/;
+    expires 1d;
+  }
+
   location ~ ^/(assets)/  {
     gzip_static on;
     expires     max;

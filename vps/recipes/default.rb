@@ -74,6 +74,15 @@ end
    end
 end
 
+# Create nightly reports directory
+directory "#{node[:unicorn][:apps_dir]}/reports" do
+  mode "0775"
+  owner "#{node[:unicorn][:user]}"
+  group "#{node[:unicorn][:group]}"
+  action :create
+  recursive true
+end
+
 template "server.#{app_name}.conf" do
   path "#{node[:nginx][:dir]}/sites-available/#{app_name}"
   source "nginx.server.app.conf.erb"

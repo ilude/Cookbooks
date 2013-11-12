@@ -33,9 +33,9 @@ bash "extract elasticsearch" do
   code  <<-EOH
   tar -xf /tmp/elasticsearch-#{version}.tar
   mv elasticsearch-#{version} elasticsearch
-  mv elasticsearch #{node[:elasticsearch][:dir]}
+  cp -r elasticsearch #{node[:elasticsearch][:dir]}
   EOH
-  not_if{ File.exists? "<%= node[:elasticsearch][:dir] %>/elasticsearch/bin/elasticsearch" }
+  not_if{ File.exists?(File.join(node[:elasticsearch][:dir], "elasticsearch/bin/elasticsearch")) }
 end
 
 template "elasticsearch.conf" do

@@ -4,9 +4,11 @@ include_recipe "default::bash"
 include_recipe "default::git"
 # include_recipe "default::disable-ip6"
 
+package "ruby-dev"
 package "curl"
 package "tmux"
 package "openssl-blacklist"
+
 
 directory "/root/.ssh" do
   owner "root"
