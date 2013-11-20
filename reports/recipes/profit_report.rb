@@ -37,5 +37,5 @@ end
 cron "profit report" do
   hour "6"
   minute "06"
-  command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; /usr/local/bin/bundle exec ruby profit_report.rb -o /apps/reports/profit_report"
+  command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; /usr/local/bin/bundle exec /usr/local/bin/ruby profit_report.rb -o /apps/reports/profit_report"
 end
