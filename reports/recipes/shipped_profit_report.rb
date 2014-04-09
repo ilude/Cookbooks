@@ -20,7 +20,7 @@ end
 
 git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
   repository repo
-  reference "_shipped"
+  reference "master_shipped"
   action :sync
   user node[:unicorn][:user]
   group node[:unicorn][:group]
