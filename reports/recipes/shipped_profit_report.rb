@@ -34,7 +34,7 @@ execute "deployment bundler" do
   action :run
 end
 
-cron "profit report" do
+cron "shipped report" do
   hour "6"
   minute "06"
   command "cd #{node[:unicorn][:apps_dir]}/#{app_name}; /usr/local/bin/bundle exec /usr/local/bin/ruby profit_report.rb -o /apps/reports/#{app_name} -s open"
