@@ -1,7 +1,7 @@
 include_recipe "unicorn"
 package "freetds-dev"
 
-app_name = "profit_report"
+app_name = "shipped_report"
 
 host = "bitbucket.org"
 repo = "git@#{host}:rammounts/profit_report.git"
@@ -20,7 +20,7 @@ end
 
 git "#{node[:unicorn][:apps_dir]}/#{app_name}" do
   repository repo
-  reference "master"
+  reference "_shipped"
   action :sync
   user node[:unicorn][:user]
   group node[:unicorn][:group]
