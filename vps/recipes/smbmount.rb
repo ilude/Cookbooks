@@ -16,98 +16,39 @@ template ".smbcredentials" do
   mode "0600"
 end
 
-directory "/mnt/line_drawings" do
-  owner node[:unicorn][:user]
-  group node[:unicorn][:group]
-  mode "0755"
-  action :create
-end
-
-#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //npi-bignas/YDrive/1art/line_drawings /mnt/line_drawings
-mount "/mnt/line_drawings" do
-  device "//#{node[:smb][:image_server] }/YDrive/1art/line_drawings"
-  fstype "cifs"
-  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
-  dump 0
-  pass 0
-  action [:mount, :enable]
-end
-
-directory "/mnt/labels" do
-  owner node[:unicorn][:user]
-  group node[:unicorn][:group]
-  mode "0755"
-  action :create
-end
-
-#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //thor/loftware$/LABELS /mnt/labels
-mount "/mnt/labels" do
-  device "//#{node[:smb][:label_server]}/loftware$/LABELS"
-  fstype "cifs"
-  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
-  dump 0
-  pass 0
-  action [:mount, :enable]
-end
-
-directory "/mnt/loftware" do
-  owner node[:unicorn][:user]
-  group node[:unicorn][:group]
-  mode "0755"
-  action :create
-end
-
-#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //zeus/Vdrive/Visual/VMFG/WDDrop /mnt/loftware
-mount "/mnt/loftware" do
-  device "//#{node[:smb][:print_server]}/Vdrive/Visual/VMFG/WDDrop"
-  fstype "cifs"
-  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
-  dump 0
-  pass 0
-  action [:mount, :enable]
-end
-
-directory "/mnt/dropbox" do
-  owner node[:unicorn][:user]
-  group node[:unicorn][:group]
-  mode "0755"
-  action :create
-end
-
-#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //npi-bignas/YDrive/VPS/Dropbox /mnt/dropbox
-mount "/mnt/dropbox" do
-  device "//#{node[:smb][:image_server]}/YDrive/VPS/Dropbox"
-  fstype "cifs"
-  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
-  dump 0
-  pass 0
-  action [:mount, :enable]
-end
-
-["#{node[:unicorn][:apps_dir]}/vps/public/images/parts", "#{node[:unicorn][:apps_dir]}/vps/public/images/locations"].each do |path|
-  directory path do
+def create_mount(local_path, remote_path)
+  directory local_path do
     owner node[:unicorn][:user]
     group node[:unicorn][:group]
-    mode 0755
+    mode "0755"
     recursive true
     action :create
   end
+
+  mount local_path do
+    device remote_path
+    fstype "cifs"
+    options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
+    dump 0
+    pass 0
+    action [:mount, :enable]
+  end
 end
 
-mount "#{node[:unicorn][:apps_dir]}/vps/public/images/parts" do
-  device "//#{node[:smb][:image_server]}/YDrive/images_part"
-  fstype "cifs"
-  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
-  dump 0
-  pass 0
-  action [:mount, :enable]
-end
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //npi-bignas/YDrive/1art/line_drawings /mnt/line_drawings
+create_mount "/mnt/line_drawings", "//#{node[:smb][:image_server] }/YDrive/1art/line_drawings"
 
-mount "#{node[:unicorn][:apps_dir]}/vps/public/images/locations" do
-  device "//#{node[:smb][:image_server]}/YDrive/images_location"
-  fstype "cifs"
-  options "credentials=/root/.smbcredentials,uid=#{node[:unicorn][:user]},gid=#{node[:unicorn][:group]}"
-  dump 0
-  pass 0
-  action [:mount, :enable]
-end
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //thor/loftware$/LABELS /mnt/labels
+create_mount "/mnt/labels", "//#{node[:smb][:label_server]}/loftware$/LABELS"
+
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //zeus/Vdrive/Visual/VMFG/WDDrop /mnt/loftware
+create_mount "/mnt/loftware", "//#{node[:smb][:print_server]}/Vdrive/Visual/VMFG/WDDrop"
+
+#mount -t cifs -o credentials=/root/.smbcredentials,uid=unicorn,gid=unicorn //npi-bignas/YDrive/VPS/Dropbox /mnt/dropbox
+create_mount "/mnt/dropbox", "//#{node[:smb][:image_server]}/YDrive/VPS/Dropbox"
+
+create_mount "#{node[:unicorn][:apps_dir]}/vps/public/images/parts", "//#{node[:smb][:image_server]}/YDrive/images_part"
+
+create_mount "#{node[:unicorn][:apps_dir]}/vps/public/images/locations", "//#{node[:smb][:image_server]}/YDrive/images_location"
+
+create_mount "/mnt/part_files", "//#{node[:smb][:image_server]}/ydrive/VPS/PartFiles"
